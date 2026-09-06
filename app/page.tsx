@@ -1,69 +1,77 @@
-import Image from "next/image";
+import Link from 'next/link';
+import Hero from '@/components/Hero';
+
+// Genuinely ordinal: each stage consumes the previous one's output.
+const STAGES = [
+  {
+    n: '1',
+    title: 'Map the ground that does not change',
+    body: 'Building density, vegetation cover and population from open satellite and OSM data, resolved to ~1 km cells. This is the part of the risk that is baked into the built city.',
+  },
+  {
+    n: '2',
+    title: 'Fold in the next 72 hours',
+    body: 'Live temperature and humidity forecasts are fused with that static layer every day, so a cell that is merely dense on a mild Tuesday becomes dangerous on a 44 °C Friday.',
+  },
+  {
+    n: '3',
+    title: 'Say where the water goes',
+    body: 'A coverage optimizer reads today’s surface against the hospitals and water points that already exist, and proposes the placements that protect the most people at risk.',
+  },
+];
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="flex-1">
+      <Hero />
+
+      <hr className="border-0 border-t-[3px] border-accent" />
+
+      <section className="bg-paper-2 px-lg py-3xl sm:px-xl">
+        <h2 className="max-w-[18ch] text-display-s font-bold">
+          Heat mapping is solved. Heat action isn’t.
+        </h2>
+        <p className="mt-lg max-w-[62ch] text-lg text-ink-2">
+          India already knows how to draw a good heat map — SEEDS and Microsoft did it
+          building-by-building, Ahmedabad’s Heat Action Plan has been saving lives since 2013. What
+          no map tells a ward officer is the thing they actually have to decide on Monday morning:
+          given four tankers and two halls, where do they go? HeatShield is built around that
+          question.
+        </p>
+
+        <ol className="mt-3xl grid gap-2xl md:grid-cols-3">
+          {STAGES.map((s) => (
+            <li key={s.n} className="border-t border-hairline pt-lg">
+              <span className="tabular block text-xs uppercase tracking-[0.24em] text-accent">
+                Stage {s.n}
+              </span>
+              <h3 className="mt-sm text-2xl font-semibold">
+                {s.title}
+              </h3>
+              <p className="mt-sm text-ink-2">{s.body}</p>
+            </li>
+          ))}
+        </ol>
+
+        <Link
+          href="/dashboard"
+          className="mt-3xl inline-flex items-center gap-sm rounded-pill bg-accent px-lg py-sm font-medium whitespace-nowrap text-accent-ink transition-transform duration-[var(--dur-fast)] ease-out hover:-translate-y-[1px] active:translate-y-[1px]"
+        >
+          Open the live map
+        </Link>
+      </section>
+
+      {/* Ft5 — statement footer. The page argued something; the footer states it. */}
+      <footer className="px-lg py-2xl sm:px-xl">
+        <p className="max-w-[30ch] text-2xl font-semibold">
+          A heatwave is not a weather event. It is a distribution problem.
+        </p>
+        <div className="mt-xl flex flex-wrap items-center gap-x-lg gap-y-xs text-sm text-ink-3">
+          <span>Forecasts: Open-Meteo</span>
+          <span>Basemap: OpenFreeMap</span>
+          <span>Built for SDG-13</span>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+      </footer>
+    </main>
   );
 }
