@@ -1,4 +1,7 @@
-import 'dotenv/config';
+// Next reads .env.local automatically; drizzle-kit does not.
+import { config } from 'dotenv';
+config({ path: '.env.local' });
+
 import type { Config } from 'drizzle-kit';
 
 export default {

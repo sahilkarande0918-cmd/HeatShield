@@ -3,7 +3,19 @@ import { join } from 'node:path';
 import { createHash } from 'node:crypto';
 
 const CACHE = join(process.cwd(), 'db', '.cache');
-const ENDPOINT = process.env.OVERPASS_URL ?? 'https://overpass-api.de/api/interpreter';
+/**
+ * The main Overpass instance rate-limits hard and intermittently refuses
+ * connections outright. These are the public mirrors, tried in turn, so one
+ * instance having a bad minute does not kill a 30-tile seed run.
+ */
+const ENDPOINTS = process.env.OVERPASS_URL
+  ? [process.env.OVERPASS_URL]
+  : [
+      'https://overpass-api.de/api/interpreter',
+      'https://overpass.kumi.systems/api/interpreter',
+      'https://overpass.private.coffee/api/interpreter',
+      'https://overpass.osm.jp/api/interpreter',
+    ];
 
 export type OsmElement = {
   type: 'node' | 'way' | 'relation';
@@ -33,9 +45,12 @@ export async function overpass(query: string, label: string): Promise<OsmElement
   }
 
   let lastErr: unknown;
-  for (let attempt = 1; attempt <= 4; attempt++) {
+  const attempts = ENDPOINTS.length * 3;
+  for (let attempt = 0; attempt < attempts; attempt++) {
+    const endpoint = ENDPOINTS[attempt % ENDPOINTS.length];
     try {
-      const res = await fetch(ENDPOINT, {
+      const res = await fetch(endpoint, {
+        signal: AbortSignal.timeout(240_000),
         method: 'POST',
         body: 'data=' + encodeURIComponent(query),
         headers: {
@@ -45,7 +60,9 @@ export async function overpass(query: string, label: string): Promise<OsmElement
           Accept: 'application/json',
         },
       });
-      if (res.status === 429 || res.status === 504) throw new Error(`overpass ${res.status}`);
+      if (res.status === 429 || res.status === 502 || res.status === 504) {
+        throw new Error(`overpass ${res.status}`);
+      }
       if (!res.ok) throw new Error(`overpass ${res.status}: ${(await res.text()).slice(0, 200)}`);
       const json = (await res.json()) as { elements: OsmElement[] };
       writeFileSync(file, JSON.stringify(json));
@@ -53,8 +70,11 @@ export async function overpass(query: string, label: string): Promise<OsmElement
       return json.elements;
     } catch (err) {
       lastErr = err;
-      const wait = 4000 * attempt;
-      console.warn(`  ${label}: attempt ${attempt} failed (${String(err)}), retrying in ${wait}ms`);
+      // Move to the next mirror immediately; only back off once we have been
+      // round the whole list.
+      const wait = 2000 + 6000 * Math.floor(attempt / ENDPOINTS.length);
+      const host = new URL(endpoint).host;
+      console.warn(`  ${label}: ${host} failed (${String(err).slice(0, 60)}), waiting ${wait}ms`);
       await sleep(wait);
     }
   }

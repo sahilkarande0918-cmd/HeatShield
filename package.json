@@ -7,9 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "seed": "tsx --env-file=.env.local db/scripts/seed.ts",
+    "seed": "tsx db/scripts/seed.ts",
     "db:push": "drizzle-kit push",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "check": "tsx lib/fusion.check.ts"
   },
   "dependencies": {
     "@google/genai": "^2.21.0",

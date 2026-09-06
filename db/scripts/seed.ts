@@ -24,7 +24,9 @@
  *       npm run seed -- pune      (one city)
  *       npm run seed -- pune --dry (fetch + score only, no database)
  */
-import 'dotenv/config';
+import { config } from 'dotenv';
+config({ path: '.env.local' });
+
 import { eq } from 'drizzle-orm';
 import { facilities, gridCells } from '../schema';
 import { CITIES, type City } from '../../lib/cities';
