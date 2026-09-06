@@ -27,7 +27,7 @@ export default function CellDetail({
   ];
 
   return (
-    <div className="flex h-full flex-col gap-lg overflow-y-auto p-lg">
+    <div className="flex flex-col gap-lg p-lg">
       <div className="flex items-start justify-between gap-md">
         <div>
           <p className="tabular text-xs uppercase tracking-[0.2em] text-ink-3">
@@ -88,7 +88,7 @@ export default function CellDetail({
         </ul>
       </div>
 
-      <p className="mt-auto text-xs text-ink-3">
+      <p className="text-xs text-ink-3">
         Vulnerability {cell.vulnerability.toFixed(0)}/100 is this cell&rsquo;s standing relative to
         the rest of the city and does not change day to day. The risk score above does.
       </p>

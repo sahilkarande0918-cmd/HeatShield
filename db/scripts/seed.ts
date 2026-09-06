@@ -221,9 +221,17 @@ async function fetchFacilities(city: City) {
     if (!c) return;
     rows.push({ city: city.key, kind, name: el.tags?.name ?? null, lat: c.lat, lng: c.lon });
   };
-  hospitals.forEach((e) => push(e, 'hospital'));
+  // Kept apart on purpose. OSM tags a great many small private clinics in
+  // Indian cities; they are healthcare, but they are not walk-in cooling
+  // shelters, and treating them as heat relief makes existing coverage look
+  // near-total and the whole siting question look already solved.
+  hospitals.forEach((e) => push(e, e.tags?.amenity === 'clinic' ? 'clinic' : 'hospital'));
   points.forEach((e) => push(e, 'water_point'));
-  console.log(`  facilities: ${hospitals.length} hospitals/clinics, ${points.length} water points`);
+  const nClinics = hospitals.filter((e) => e.tags?.amenity === 'clinic').length;
+  console.log(
+    `  facilities: ${hospitals.length - nClinics} hospitals, ${nClinics} clinics, ` +
+      `${points.length} water points`,
+  );
   return rows;
 }
 

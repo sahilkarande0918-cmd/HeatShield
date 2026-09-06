@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useMemo, useState, useSyncExternalStore } from 'react';
 import RiskMap, { type CellProps, type SiteMarker } from '@/components/RiskMap';
 import CellDetail from './CellDetail';
+import Optimizer, { useOptimizer } from './Optimizer';
 import { useFacilities, useRiskSurface } from './useRiskData';
 import { CITIES, getCity } from '@/lib/cities';
 import { RISK_BANDS } from '@/lib/risk';
@@ -24,7 +25,8 @@ export default function Dashboard({ initialCity }: { initialCity: string }) {
   const [selected, setSelected] = useState<CellProps | null>(null);
   const [showFacilities, setShowFacilities] = useState(true);
   const [resetToken, setResetToken] = useState(0);
-  const [proposed] = useState<SiteMarker[]>([]);
+  const [siteBudget, setSiteBudget] = useState(5);
+  const [countHospitals, setCountHospitals] = useState(false);
 
   const city = getCity(cityKey);
   // Pinned at hydration rather than read during render: Date.now() in render is
@@ -36,6 +38,8 @@ export default function Dashboard({ initialCity }: { initialCity: string }) {
   );
   const { data, meta, error, loading, reload } = useRiskSurface(cityKey, at, tempOffset);
   const facilities = useFacilities(cityKey);
+  const opt = useOptimizer(cityKey, at, tempOffset, siteBudget, countHospitals);
+  const proposed: SiteMarker[] = opt.result?.sites ?? [];
 
   return (
     <div className="flex h-[100svh] flex-col">
@@ -112,7 +116,7 @@ export default function Dashboard({ initialCity }: { initialCity: string }) {
           <Legend />
         </div>
 
-        <aside className="flex w-full shrink-0 flex-col border-t border-hairline bg-paper-2 lg:w-[360px] lg:border-t-0 lg:border-l">
+        <aside className="flex w-full shrink-0 flex-col overflow-y-auto border-t border-hairline bg-paper-2 lg:w-[380px] lg:border-t-0 lg:border-l">
           {selected ? (
             <CellDetail cell={selected} onClose={() => setSelected(null)} />
           ) : (
@@ -129,6 +133,16 @@ export default function Dashboard({ initialCity }: { initialCity: string }) {
               facilityCount={facilities.length}
             />
           )}
+
+          <Optimizer
+            result={opt.result}
+            loading={opt.loading}
+            error={opt.error}
+            sites={siteBudget}
+            setSites={setSiteBudget}
+            countHospitals={countHospitals}
+            setCountHospitals={setCountHospitals}
+          />
         </aside>
       </div>
     </div>
@@ -198,7 +212,7 @@ function Summary({
         });
 
   return (
-    <div className="flex flex-col gap-lg overflow-y-auto p-lg">
+    <div className="flex flex-col gap-lg p-lg">
       <div>
         <p className="tabular text-xs uppercase tracking-[0.2em] text-ink-3">People at risk now</p>
         {/* Honest empty state: no number until real data has arrived. */}
@@ -272,7 +286,7 @@ function Summary({
         </label>
       </div>
 
-      <p className="mt-auto text-xs text-ink-3">
+      <p className="text-xs text-ink-3">
         Click any cell for its breakdown.
         {meta?.forecastFetchedAt &&
           ` Forecast fetched ${new Date(meta.forecastFetchedAt).toLocaleTimeString('en-IN', {

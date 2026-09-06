@@ -23,7 +23,7 @@ export type CellProps = {
   lng: number;
 };
 
-export type SiteMarker = { lat: number; lng: number; covered: number; rank: number };
+export type SiteMarker = { lat: number; lng: number; rank: number; gain: number; cumulative: number };
 
 type Props = {
   city: City;
@@ -251,7 +251,7 @@ function proposedCollection(proposed: SiteMarker[]): GeoJSON.FeatureCollection {
     features: proposed.map((p) => ({
       type: 'Feature',
       geometry: { type: 'Point', coordinates: [p.lng, p.lat] },
-      properties: { rank: String(p.rank), covered: p.covered },
+      properties: { rank: String(p.rank), gain: p.gain },
     })),
   };
 }
