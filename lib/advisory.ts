@@ -106,10 +106,12 @@ export async function generateAdvisory(i: AdvisoryInput, apiKey?: string): Promi
   if (!apiKey) return templateAdvisory(i);
   try {
     const ai = new GoogleGenAI({ apiKey });
-    const res = await ai.models.generateContent({
-      model: MODEL,
-      contents: buildPrompt(i),
-    });
+    // Bounded so one slow model call cannot leave a judge staring at a
+    // spinner: past this we serve the deterministic template instead.
+    const res = await withTimeout(
+      ai.models.generateContent({ model: MODEL, contents: buildPrompt(i) }),
+      20_000,
+    );
     const body = res.text?.trim();
     if (!body) throw new Error('empty response');
     return { body, source: 'gemini' };
@@ -117,4 +119,13 @@ export async function generateAdvisory(i: AdvisoryInput, apiKey?: string): Promi
     console.error('[advisory] Gemini call failed, using template:', err);
     return templateAdvisory(i);
   }
+}
+
+function withTimeout<T>(p: Promise<T>, ms: number): Promise<T> {
+  return Promise.race([
+    p,
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error(`timed out after ${ms}ms`)), ms),
+    ),
+  ]);
 }

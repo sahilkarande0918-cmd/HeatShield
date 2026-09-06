@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useMemo, useState, useSyncExternalStore } from 'react';
 import RiskMap, { type CellProps, type SiteMarker } from '@/components/RiskMap';
 import CellDetail from './CellDetail';
+import ForecastChart from './ForecastChart';
 import Optimizer, { useOptimizer } from './Optimizer';
 import { useFacilities, useRiskSurface } from './useRiskData';
 import { CITIES, getCity } from '@/lib/cities';
@@ -137,6 +138,7 @@ export default function Dashboard({ initialCity }: { initialCity: string }) {
               showFacilities={showFacilities}
               setShowFacilities={setShowFacilities}
               facilityCount={facilities.length}
+              city={cityKey}
             />
           )}
 
@@ -194,6 +196,7 @@ function Summary({
   showFacilities,
   setShowFacilities,
   facilityCount,
+  city,
 }: {
   meta: ReturnType<typeof useRiskSurface>['meta'];
   loading: boolean;
@@ -205,6 +208,7 @@ function Summary({
   showFacilities: boolean;
   setShowFacilities: (b: boolean) => void;
   facilityCount: number;
+  city: string;
 }) {
   const whenLabel =
     bootMs === null
@@ -252,6 +256,12 @@ function Summary({
           <span>Now</span>
           <span>+72 h</span>
         </div>
+        <ForecastChart
+          city={city}
+          tempOffset={tempOffset}
+          hoursAhead={hoursAhead}
+          onPickHour={setHoursAhead}
+        />
       </div>
 
       <div className="border-t border-hairline pt-lg">
