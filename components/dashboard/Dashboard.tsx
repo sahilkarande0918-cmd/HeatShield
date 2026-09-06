@@ -118,7 +118,13 @@ export default function Dashboard({ initialCity }: { initialCity: string }) {
 
         <aside className="flex w-full shrink-0 flex-col overflow-y-auto border-t border-hairline bg-paper-2 lg:w-[380px] lg:border-t-0 lg:border-l">
           {selected ? (
-            <CellDetail cell={selected} onClose={() => setSelected(null)} />
+            <CellDetail
+              cell={selected}
+              city={cityKey}
+              at={at}
+              tempOffset={tempOffset}
+              onClose={() => setSelected(null)}
+            />
           ) : (
             <Summary
               meta={meta}

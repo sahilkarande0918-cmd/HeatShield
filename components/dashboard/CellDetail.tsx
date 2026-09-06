@@ -2,6 +2,7 @@
 
 import type { CellProps } from '@/components/RiskMap';
 import { riskBand } from '@/lib/risk';
+import AdvisoryPanel from './AdvisoryPanel';
 
 const fmt = (n: number) => n.toLocaleString('en-IN');
 const pct = (n: number) => `${Math.round(n * 100)}%`;
@@ -13,9 +14,15 @@ const pct = (n: number) => `${Math.round(n * 100)}%`;
  */
 export default function CellDetail({
   cell,
+  city,
+  at,
+  tempOffset,
   onClose,
 }: {
   cell: CellProps;
+  city: string;
+  at: Date | null;
+  tempOffset: number;
   onClose: () => void;
 }) {
   const band = riskBand(cell.risk);
@@ -87,6 +94,8 @@ export default function CellDetail({
           ))}
         </ul>
       </div>
+
+      <AdvisoryPanel city={city} cellId={cell.id} at={at} tempOffset={tempOffset} />
 
       <p className="text-xs text-ink-3">
         Vulnerability {cell.vulnerability.toFixed(0)}/100 is this cell&rsquo;s standing relative to
