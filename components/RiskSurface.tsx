@@ -13,18 +13,29 @@
  */
 
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState, useSyncExternalStore } from 'react';
+
+const REDUCED = '(prefers-reduced-motion: reduce)';
 
 function useReducedMotion() {
-  const [reduced, setReduced] = useState(false);
-  useEffect(() => {
-    const q = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setReduced(q.matches);
-    const on = () => setReduced(q.matches);
-    q.addEventListener('change', on);
-    return () => q.removeEventListener('change', on);
-  }, []);
-  return reduced;
+  return useSyncExternalStore(
+    (notify) => {
+      const q = window.matchMedia(REDUCED);
+      q.addEventListener('change', notify);
+      return () => q.removeEventListener('change', notify);
+    },
+    () => window.matchMedia(REDUCED).matches,
+    () => false, // server: assume motion is fine, the canvas is client-only anyway
+  );
+}
+
+/** True only after hydration. WebGL cannot run during the server render. */
+function useHydrated() {
+  return useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
 }
 import * as THREE from 'three';
 
@@ -161,9 +172,7 @@ function Surface({ animate }: { animate: boolean }) {
 
 export default function RiskSurface() {
   const animate = !useReducedMotion();
-  // WebGL cannot render on the server, and the fold is legible without it.
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const mounted = useHydrated();
 
   // A dropped WebGL context (integrated GPU under load, a laptop switching
   // graphics, a projector) must not leave a broken canvas on the fold. The
