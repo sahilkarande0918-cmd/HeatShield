@@ -9,6 +9,9 @@ export type City = {
   /** Grid cell edge in degrees. ~0.009 deg is roughly 1 km at these latitudes. */
   cellSize: number;
   initialZoom: number;
+  /** Municipal-corporation population, used to scale the dasymetric split. */
+  population: number;
+  populationSource: string;
   /** One line of why this city is in the demo. Shown in the city switcher. */
   note: string;
 };
@@ -22,6 +25,8 @@ export const CITIES: Record<string, City> = {
     bbox: [73.72, 18.42, 74.0, 18.64],
     cellSize: 0.009,
     initialZoom: 11.2,
+    population: 3_124_458,
+    populationSource: 'Pune Municipal Corporation, Census of India 2011',
     note: 'Fast-growing, steep density gradient between the old city and the fringe.',
   },
   ahmedabad: {
@@ -32,6 +37,8 @@ export const CITIES: Record<string, City> = {
     bbox: [72.45, 22.93, 72.72, 23.15],
     cellSize: 0.009,
     initialZoom: 11.2,
+    population: 5_577_940,
+    populationSource: 'Ahmedabad Municipal Corporation, Census of India 2011',
     note: "India's first Heat Action Plan city, after the 2010 heatwave.",
   },
 };

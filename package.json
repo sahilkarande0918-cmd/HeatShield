@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "seed": "tsx --env-file=.env.local db/scripts/seed.ts",
+    "db:push": "drizzle-kit push",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@google/genai": "^2.21.0",
