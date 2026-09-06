@@ -317,7 +317,7 @@ function Summary({
 
 function Legend() {
   return (
-    <div className="pointer-events-none absolute bottom-lg left-lg z-10 rounded-md border border-hairline bg-paper/85 p-sm backdrop-blur-sm">
+    <div className="pointer-events-none absolute top-sm left-sm z-10 rounded-md border border-hairline bg-paper/85 p-sm backdrop-blur-sm lg:top-auto lg:bottom-lg lg:left-lg">
       <div className="flex items-end gap-2xs">
         {RISK_BANDS.map((b) => (
           <div key={b.key} className="w-[46px]">

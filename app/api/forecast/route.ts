@@ -1,10 +1,8 @@
-import { eq } from 'drizzle-orm';
 import { NextResponse } from 'next/server';
-import { db } from '@/db';
-import { gridCells } from '@/db/schema';
 import { getCity } from '@/lib/cities';
 import { fuse } from '@/lib/fusion';
 import { getForecast } from '@/lib/openmeteo';
+import { getCells } from '@/lib/staticData';
 
 export const runtime = 'nodejs';
 export const revalidate = 900;
@@ -26,7 +24,7 @@ export async function GET(req: Request) {
   }
 
   const [cells, forecast] = await Promise.all([
-    db.select().from(gridCells).where(eq(gridCells.city, city.key)),
+    getCells(city),
     getForecast(city).catch(() => null),
   ]);
 

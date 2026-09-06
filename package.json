@@ -13,7 +13,8 @@
     "check": "tsx lib/fusion.check.ts && tsx lib/optimizer.check.ts",
     "predev": "node scripts/copy-maplibre-worker.mjs",
     "prebuild": "node scripts/copy-maplibre-worker.mjs",
-    "shot": "node scripts/screenshot.mjs"
+    "shot": "node scripts/screenshot.mjs",
+    "warm": "node scripts/warm.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.21.0",
