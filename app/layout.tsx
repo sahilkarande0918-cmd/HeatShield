@@ -37,6 +37,11 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
       lang="en"
       className={`${archivo.variable} ${plexSans.variable} ${plexMono.variable} h-full antialiased`}
     >
+      <head>
+        {/* The hero opens on this frame; fetching it with the document is what
+            keeps the fold from starting black. */}
+        <link rel="preload" as="image" href="/hero-poster.jpg" />
+      </head>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );

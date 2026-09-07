@@ -54,6 +54,23 @@
   --color-accent-ink: oklch(18% 0.03 214);
   --color-focus: oklch(80% 0.09 214);
 
+  /* Secondary, for depth on the content pages only.
+   *
+   * Lifted from the LOW end of the risk scale below (hue 288) and pulled down
+   * in chroma until it cannot be mistaken for a value. That shared hue is the
+   * point: the marketing sections and the map are then telling one colour
+   * story instead of two unrelated ones. Never used for anything that encodes
+   * real risk, and never on the map. */
+  --color-violet: oklch(60% 0.1 287);
+  --color-violet-tint: oklch(23% 0.032 287);
+  --color-violet-glow: oklch(48% 0.14 287);
+
+  /* Section grounds. Barely separable by eye, deliberately not one flat hex
+   * repeated down the page — enough that scrolling feels like moving between
+   * rooms rather than along a single slab. */
+  --color-ground-1: oklch(17.5% 0.014 272);
+  --color-ground-2: oklch(13.5% 0.01 250);
+
   /* ---- DATA --------------------------------------------------------------
    * The risk ramp. Untouched: it is doing real semantic work, it is
    * perceptually monotonic in lightness so it survives deuteranopia and
@@ -113,6 +130,20 @@ body {
   overflow-x: clip;
 }
 
+html {
+  /* Native smooth scroll for in-page jumps. Deliberately not a scroll-hijacking
+   * library: those fight trackpad momentum, break find-in-page and keyboard
+   * paging, and add a frame of lag to every gesture. The sense of smoothness
+   * here comes from parallax on real scroll position instead. */
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 body {
   background: var(--color-paper);
   color: var(--color-ink);
@@ -151,15 +182,44 @@ h3 {
   letter-spacing: -0.01em;
 }
 
-/* The quiet numeral that carries sequence in the explainer, in place of the
- * all-caps "STAGE 1" tag and hairline rule that used to sit above it. */
+/* The numeral that carries sequence in the explainer, in place of the all-caps
+ * "STAGE 1" tag and hairline rule that used to sit above it.
+ *
+ * Rendered in the chrome accent at a size that makes it a structural anchor.
+ * It was previously paper-3 on paper-2 — about 1.4:1 — which read as an
+ * accident rather than a decision. */
 .step-numeral {
   font-family: var(--font-display);
-  font-size: clamp(2.5rem, 4vw, 3.5rem);
-  font-weight: 600;
-  line-height: 1;
-  color: var(--color-paper-3);
-  letter-spacing: -0.04em;
+  font-size: clamp(3.25rem, 5.4vw, 4.75rem);
+  font-weight: 700;
+  line-height: 0.8;
+  color: var(--color-accent);
+  letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* One orchestrated moment per section: the three cards arrive together, on a
+ * stagger, once. The end state is the resting state, so if the observer never
+ * fires the content is still there and still readable. */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 620ms var(--ease-out),
+    transform 620ms var(--ease-out);
+}
+
+.reveal[data-shown='true'] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 
 /* The one orchestrated moment: the fold resolves out of the dark, once.

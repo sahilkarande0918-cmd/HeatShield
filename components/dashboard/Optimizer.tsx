@@ -133,7 +133,7 @@ export default function Optimizer({
             step={1}
             value={sites}
             onChange={(e) => setSites(Number(e.target.value))}
-            className="mt-sm w-full accent-[var(--color-accent)]"
+            className="mt-sm h-[24px] w-full accent-[var(--color-accent)]"
           />
 
           {result && result.sites.length > 0 && (

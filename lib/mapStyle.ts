@@ -27,7 +27,12 @@ export function heatShieldMapStyle(): StyleSpecification {
     version: 8,
     glyphs: 'https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf',
     sources: {
-      openmaptiles: { type: 'vector', url: 'https://tiles.openfreemap.org/planet' },
+      openmaptiles: {
+        type: 'vector',
+        url: 'https://tiles.openfreemap.org/planet',
+        // Suppress the TileJSON's own long credit; we render a short one below.
+        attribution: '',
+      },
     },
     layers: [
       { id: 'background', type: 'background', paint: { 'background-color': PAPER } },

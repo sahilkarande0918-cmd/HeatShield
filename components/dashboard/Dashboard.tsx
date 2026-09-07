@@ -48,7 +48,7 @@ export default function Dashboard({ initialCity }: { initialCity: string }) {
         <div className="flex items-center gap-lg">
           <Link
             href="/"
-            className="tabular text-xs uppercase tracking-[0.22em] text-ink-2 transition-colors duration-[var(--dur-fast)] hover:text-ink"
+            className="tabular inline-flex min-h-[44px] items-center text-xs uppercase tracking-[0.22em] text-ink-2 transition-colors duration-[var(--dur-fast)] hover:text-ink"
           >
             ← HeatShield
           </Link>
@@ -62,7 +62,7 @@ export default function Dashboard({ initialCity }: { initialCity: string }) {
                 }}
                 title={c.note}
                 aria-pressed={c.key === cityKey}
-                className={`rounded-pill px-sm py-2xs text-sm transition-colors duration-[var(--dur-fast)] ${
+                className={`inline-flex min-h-[40px] items-center rounded-pill px-sm text-sm transition-colors duration-[var(--dur-fast)] ${
                   c.key === cityKey
                     ? 'bg-paper-3 text-ink'
                     : 'text-ink-3 hover:text-ink-2'
@@ -81,7 +81,7 @@ export default function Dashboard({ initialCity }: { initialCity: string }) {
               setSelected(null);
               setResetToken((t) => t + 1);
             }}
-            className="tabular rounded-pill border border-hairline px-sm py-2xs text-xs uppercase tracking-[0.14em] text-ink-3 transition-colors duration-[var(--dur-fast)] hover:text-ink"
+            className="tabular inline-flex min-h-[40px] items-center rounded-pill border border-hairline px-sm text-xs uppercase tracking-[0.14em] text-ink-3 transition-colors duration-[var(--dur-fast)] hover:text-ink"
           >
             Reset view
           </button>
@@ -253,7 +253,7 @@ function Summary({
           step={1}
           value={hoursAhead}
           onChange={(e) => setHoursAhead(Number(e.target.value))}
-          className="mt-sm w-full accent-[var(--color-accent)]"
+          className="mt-sm h-[24px] w-full accent-[var(--color-accent)]"
         />
         <div className="tabular flex justify-between text-xs text-ink-3">
           <span>Now</span>
@@ -276,7 +276,7 @@ function Summary({
               onClick={() => setTempOffset(s.offset)}
               title={s.hint}
               aria-pressed={tempOffset === s.offset}
-              className={`tabular rounded-pill px-sm py-2xs text-xs whitespace-nowrap transition-colors duration-[var(--dur-fast)] ${
+              className={`tabular inline-flex min-h-[40px] items-center rounded-pill px-md text-xs whitespace-nowrap transition-colors duration-[var(--dur-fast)] ${
                 tempOffset === s.offset
                   ? 'border border-accent/45 bg-accent/15 text-accent'
                   : 'border border-hairline text-ink-3 hover:text-ink'

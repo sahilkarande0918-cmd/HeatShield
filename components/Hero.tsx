@@ -1,4 +1,7 @@
+'use client';
+
 import Link from 'next/link';
+import { useAutoPlay, useParallax } from './motion';
 
 /**
  * The hero.
@@ -13,24 +16,38 @@ import Link from 'next/link';
  * nothing here is a risk value.
  */
 export default function Hero() {
+  const { ref: videoRef } = useAutoPlay<HTMLVideoElement>();
+  // Gentle, and negative so the footage drifts up slower than the page. Scaled
+  // past the frame below so the translation never exposes an edge.
+  const bgRef = useParallax<HTMLDivElement>(-0.14);
+
   return (
     <header className="relative flex min-h-[100svh] flex-col overflow-hidden">
       {/* ---- background ---------------------------------------------------
-       * Poster keeps the fold from flashing empty on a slow connection, and
-       * the video is hidden entirely under prefers-reduced-motion (globals.css)
-       * which leaves the same dark ground behind it.
+       * The poster is frame 0 of the loop, so it paints instantly and the
+       * video crossing into place is invisible — that is what removes the
+       * second of black the fold used to open on. preload="auto" because a
+       * 4.8 MB hero is the point of the page, not a progressive enhancement.
+       * Hidden entirely under prefers-reduced-motion (globals.css), which
+       * leaves the poster and the same dark ground behind it.
        * ------------------------------------------------------------------ */}
-      <div className="pointer-events-none absolute inset-0 -z-20 bg-paper">
+      <div
+        ref={bgRef}
+        className="pointer-events-none absolute -inset-y-[12%] inset-x-0 -z-20 bg-paper bg-cover bg-center"
+        style={{ backgroundImage: 'url(/hero-poster.jpg)', willChange: 'transform' }}
+      >
         <video
+          ref={videoRef}
           data-hero-loop
           className="h-full w-full object-cover"
           style={{ filter: 'saturate(0.72) contrast(1.04) brightness(0.92)' }}
           src="/hero-loop.mp4"
+          poster="/hero-poster.jpg"
           autoPlay
           muted
           loop
           playsInline
-          preload="metadata"
+          preload="auto"
           aria-hidden="true"
         />
       </div>
@@ -62,7 +79,7 @@ export default function Hero() {
         <span className="tabular text-xs tracking-[0.22em] text-ink-2 uppercase">HeatShield</span>
         <Link
           href="/dashboard"
-          className="tabular rounded-pill border border-accent/40 bg-accent/10 px-md py-2xs text-xs tracking-[0.16em] whitespace-nowrap text-accent uppercase backdrop-blur-sm transition-colors duration-[var(--dur-fast)] hover:bg-accent hover:text-accent-ink"
+          className="tabular inline-flex min-h-[44px] items-center rounded-pill border border-accent/40 bg-accent/10 px-md text-xs tracking-[0.16em] whitespace-nowrap text-accent uppercase backdrop-blur-sm transition-colors duration-[var(--dur-fast)] hover:bg-accent hover:text-accent-ink"
         >
           Open the map →
         </Link>

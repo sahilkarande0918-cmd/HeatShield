@@ -93,7 +93,7 @@ export default function RiskMap({
     m.addControl(
       new maplibregl.AttributionControl({
         compact: true,
-        customAttribution: '© OpenStreetMap · OpenFreeMap · Open-Meteo',
+        customAttribution: '© OpenStreetMap · OpenFreeMap',
       }),
       'bottom-left',
     );
