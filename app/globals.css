@@ -1,28 +1,63 @@
 @import "tailwindcss";
 
-/* Hallmark · genre: atmospheric · macrostructure: Marquee Hero · theme: custom
- * vibe: "civic heat instrument, dusk, urgent but calm"
- * paper oklch(15% 0.02 45) dark · accent oklch(71% 0.19 56) warm · display grotesque-sans
- * nav: N9 edge-aligned · footer: Ft5 statement · enrichment: Tier-B hand-built WebGL surface
- * pre-emit critique: P5 H5 E4 S5 R4 V5
- */
+/* ===========================================================================
+ * HeatShield theme — "cool chrome, hot data"
+ *
+ * TYPEFACES (a decision, not a default)
+ *   Display — Archivo. A grotesk drawn for signage and wayfinding: wide, flat-
+ *     sided, faintly institutional. It reads as public infrastructure rather
+ *     than as a startup, which is what this tool is pretending to be. Chosen
+ *     over Inter / Geist / Space Grotesk, which are the current defaults and
+ *     make any site wearing them look generated.
+ *   Body + data — IBM Plex Sans / Plex Mono. Drawn for civic and enterprise
+ *     work, tall x-height so it holds up at 12–13px in a dense panel, and it
+ *     ships a Devanagari companion — which matters for a tool that has to
+ *     print Indian ward names. Plex Mono carries every figure so numbers stay
+ *     tabular and stop jittering as they tick.
+ *
+ * COLOUR — two systems that never mix.
+ *
+ *   CHROME is the interface: background, text, borders, controls. It is cool
+ *   and desaturated on purpose. Its single accent (a muted ice-blue) means
+ *   "the tool is speaking" — the primary CTA, the live indicator, hover and
+ *   focus, and the placements the optimizer is recommending. Nothing else.
+ *
+ *   DATA is the heat ramp, and it is the only warm thing on the page. It
+ *   encodes real risk values and nothing else: map cells, the legend, the
+ *   risk-over-time series. A threshold or reference line is not a risk value,
+ *   so it takes chrome grey, not a ramp colour.
+ *
+ *   The split is the pitch: the instrument is calm, the world it is showing
+ *   you is on fire. If a reader has to check a label to tell an interactive
+ *   control apart from a dangerously hot cell, this has failed.
+ * ======================================================================== */
 
 @theme {
-  /* ---- paper: warm-biased near-black, never neutral grey ------------------ */
-  --color-paper: oklch(15% 0.02 45);
-  --color-paper-2: oklch(20% 0.024 45);
-  --color-paper-3: oklch(26% 0.028 45);
-  --color-hairline: oklch(33% 0.026 45);
+  /* ---- CHROME ------------------------------------------------------------
+   * Cool near-black, not the warm maroon-black this used to be, and not the
+   * neutral #111 every dark theme defaults to.
+   * -------------------------------------------------------------------- */
+  --color-paper: oklch(15.5% 0.01 250);
+  --color-paper-2: oklch(20.5% 0.012 250);
+  --color-paper-3: oklch(26.5% 0.013 250);
+  /* Dividers recede. If you can see one clearly, it is too strong. */
+  --color-hairline: oklch(31.5% 0.012 250);
 
-  --color-ink: oklch(96% 0.008 70);
-  --color-ink-2: oklch(76% 0.014 60);
-  --color-ink-3: oklch(58% 0.016 55);
+  --color-ink: oklch(96.5% 0.003 250);
+  --color-ink-2: oklch(74.5% 0.006 250);
+  --color-ink-3: oklch(56.5% 0.008 250);
 
-  /* ---- the risk ramp -----------------------------------------------------
-   * Structural, not decorative: these five tokens are the brand, the hero
-   * shader, the map fill and the legend. Inferno-derived and monotonic in
-   * lightness, so the scale still reads under deuteranopia and in greyscale
-   * — which the conventional green-to-red heat ramp does not.
+  /* The one chrome accent. Desaturated so it sits on the dark ground instead
+   * of vibrating against it. */
+  --color-accent: oklch(76% 0.082 214);
+  --color-accent-dim: oklch(64% 0.07 214);
+  --color-accent-ink: oklch(18% 0.03 214);
+  --color-focus: oklch(80% 0.09 214);
+
+  /* ---- DATA --------------------------------------------------------------
+   * The risk ramp. Untouched: it is doing real semantic work, it is
+   * perceptually monotonic in lightness so it survives deuteranopia and
+   * greyscale, and it is the only place warm colour is allowed.
    * -------------------------------------------------------------------- */
   --color-risk-0: oklch(34% 0.1 288); /* low       */
   --color-risk-1: oklch(46% 0.17 332); /* moderate  */
@@ -30,16 +65,15 @@
   --color-risk-3: oklch(71% 0.19 56); /* severe    */
   --color-risk-4: oklch(87% 0.17 96); /* extreme   */
 
-  --color-accent: var(--color-risk-3);
-  --color-accent-ink: oklch(18% 0.04 55);
-  --color-focus: oklch(80% 0.14 200);
-
   /* ---- type -------------------------------------------------------------- */
-  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
   --font-body: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
   --font-data: var(--font-plex-mono), ui-monospace, "SF Mono", monospace;
 
-  --text-display: clamp(2.75rem, 9vw + 0.25rem, 8.5rem);
+  /* Capped lower than before: Archivo sets much wider than the previous
+   * display face, and at 8.5rem the hero headline broke to three lines with an
+   * orphan. */
+  --text-display: clamp(2.5rem, 7.4vw + 0.25rem, 6.5rem);
   --text-display-s: clamp(2.25rem, 5vw + 0.5rem, 4rem);
   --text-2xl: clamp(1.5rem, 1.6vw + 1rem, 2.125rem);
   --text-xl: 1.25rem;
@@ -93,8 +127,8 @@ h2,
 h3 {
   font-family: var(--font-display);
   font-style: normal;
-  letter-spacing: -0.035em;
-  line-height: 0.94;
+  letter-spacing: -0.025em;
+  line-height: 0.98;
   overflow-wrap: anywhere;
   min-width: 0;
 }
@@ -117,21 +151,22 @@ h3 {
   letter-spacing: -0.01em;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 150ms !important;
-  }
+/* The quiet numeral that carries sequence in the explainer, in place of the
+ * all-caps "STAGE 1" tag and hairline rule that used to sit above it. */
+.step-numeral {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 4vw, 3.5rem);
+  font-weight: 600;
+  line-height: 1;
+  color: var(--color-paper-3);
+  letter-spacing: -0.04em;
 }
 
 /* The one orchestrated moment: the fold resolves out of the dark, once.
  * Deliberately CSS and not a JS animation library — content must never depend
  * on a script running to become visible. `both` means the end state is the
  * resting state, so a throttled or blocked animation still leaves a readable
- * page, and the reduced-motion block above collapses it to an instant. */
+ * page, and the reduced-motion block below collapses it to an instant. */
 @keyframes hs-rise {
   from {
     opacity: 0;
@@ -145,4 +180,19 @@ h3 {
 
 .rise {
   animation: hs-rise 700ms var(--ease-out) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 150ms !important;
+  }
+
+  /* A looping background video is motion too. */
+  video[data-hero-loop] {
+    display: none;
+  }
 }

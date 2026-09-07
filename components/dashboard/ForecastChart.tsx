@@ -57,7 +57,7 @@ export default function ForecastChart({
   }, [city, tempOffset]);
 
   if (error) {
-    return <p className="mt-sm text-sm text-risk-2">Forecast trend unavailable: {error}</p>;
+    return <p className="mt-sm text-sm text-ink">Forecast trend unavailable: {error}</p>;
   }
   // Honest empty state — no placeholder shape pretending to be data.
   if (!series) {
@@ -92,7 +92,9 @@ export default function ForecastChart({
             axisLine={false}
             tickLine={false}
           />
-          <ReferenceLine y={60} stroke="var(--color-risk-3)" strokeDasharray="3 3" opacity={0.5} />
+          {/* The relief threshold is a reference, not a measurement, so it takes
+              chrome grey rather than a colour off the heat ramp. */}
+          <ReferenceLine y={60} stroke="var(--color-ink-3)" strokeDasharray="3 3" opacity={0.7} />
           <Area
             type="monotone"
             dataKey="worstRisk"
@@ -105,7 +107,7 @@ export default function ForecastChart({
           <Line
             type="monotone"
             dataKey="medianRisk"
-            stroke="var(--color-ink-3)"
+            stroke="var(--color-ink-2)"
             strokeWidth={1.5}
             dot={false}
             isAnimationActive={false}
@@ -131,7 +133,7 @@ export default function ForecastChart({
 
       <div className="tabular flex flex-wrap gap-md text-xs text-ink-3">
         <Key color="var(--color-risk-4)">Worst cell</Key>
-        <Key color="var(--color-ink-3)">Median cell</Key>
+        <Key color="var(--color-ink-2)">Median cell</Key>
         <span>Dashed line: relief threshold</span>
       </div>
       <p className="mt-xs text-xs text-ink-3">Click the chart to jump to an hour.</p>

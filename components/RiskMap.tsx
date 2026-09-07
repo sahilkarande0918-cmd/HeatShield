@@ -109,18 +109,25 @@ export default function RiskMap({
         source: 'cells',
         paint: {
           'fill-color': ['interpolate', ['linear'], ['get', 'risk'], ...RISK_STOPS],
+          // A cell boundary is structure, not a measurement. Left to default it
+          // takes the fill colour and draws a warm grid over the whole city,
+          // which reads as data it is not. Chrome grey instead.
+          'fill-outline-color': '#2d3238',
           // Low-risk cells nearly disappear so the eye goes to the pockets
-          // that matter instead of a wall of uniform colour.
+          // that matter instead of a wall of uniform colour. Pulled down from
+          // the previous ceiling: against the cooler basemap the warm ramp
+          // reads much stronger, and at 0.78 it buried the streets a ward
+          // officer needs in order to recognise where they are looking.
           'fill-opacity': [
             'interpolate',
             ['linear'],
             ['get', 'risk'],
             0,
-            0.12,
+            0.08,
             40,
-            0.42,
+            0.34,
             100,
-            0.78,
+            0.62,
           ],
         },
       });
@@ -130,7 +137,7 @@ export default function RiskMap({
         type: 'line',
         source: 'cells',
         filter: ['==', ['get', 'id'], -1],
-        paint: { 'line-color': '#f5f1ec', 'line-width': 2 },
+        paint: { 'line-color': '#f2f4f5', 'line-width': 2 },
       });
 
       m.addLayer({
@@ -139,10 +146,10 @@ export default function RiskMap({
         source: 'facilities',
         paint: {
           'circle-radius': ['interpolate', ['linear'], ['zoom'], 10, 2.2, 15, 5],
-          'circle-color': '#f5f1ec',
-          'circle-opacity': 0.55,
+          'circle-color': '#aaadb0',
+          'circle-opacity': 0.6,
           'circle-stroke-width': 0.5,
-          'circle-stroke-color': '#120805',
+          'circle-stroke-color': '#090d10',
         },
       });
 
@@ -152,10 +159,12 @@ export default function RiskMap({
         source: 'proposed',
         paint: {
           'circle-radius': ['interpolate', ['linear'], ['zoom'], 10, 8, 15, 22],
-          'circle-color': '#4bd6ff',
+          // Chrome accent, not a heat colour: these are the tool's
+          // recommendations, not measured risk.
+          'circle-color': '#70bfd1',
           'circle-opacity': 0.18,
           'circle-stroke-width': 1.5,
-          'circle-stroke-color': '#4bd6ff',
+          'circle-stroke-color': '#70bfd1',
         },
       });
       m.addLayer({
@@ -168,7 +177,7 @@ export default function RiskMap({
           'text-size': 12,
           'text-allow-overlap': true,
         },
-        paint: { 'text-color': '#04141a', 'text-halo-color': '#4bd6ff', 'text-halo-width': 1.6 },
+        paint: { 'text-color': '#01151a', 'text-halo-color': '#70bfd1', 'text-halo-width': 1.6 },
       });
 
       m.on('click', 'cells-fill', (e: MapMouseEvent & { features?: MapGeoJSONFeature[] }) => {

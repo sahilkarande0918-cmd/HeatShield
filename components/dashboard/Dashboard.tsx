@@ -103,7 +103,8 @@ export default function Dashboard({ initialCity }: { initialCity: string }) {
 
           {error && (
             <div className="absolute inset-x-lg top-lg z-10 rounded-md border border-hairline bg-paper-2 p-lg">
-              <p className="font-medium text-risk-2">Could not load the risk surface</p>
+              {/* Deliberately not red: a failed request is not a heat risk. */}
+              <p className="font-medium text-ink">Could not load the risk surface</p>
               <p className="mt-xs text-sm text-ink-2">{error}</p>
               <button
                 onClick={() => void reload()}
@@ -166,12 +167,14 @@ function StatusPill({
   loading: boolean;
   error: string | null;
 }) {
-  if (error) return <Pill tone="var(--color-risk-2)">Offline</Pill>;
+  // Status is chrome, not data. These used to borrow the heat ramp, which made
+  // "the feed is stale" look like "this place is dangerous".
+  if (error) return <Pill tone="var(--color-ink-3)">Offline</Pill>;
   if (loading && !meta) return <Pill tone="var(--color-ink-3)">Loading…</Pill>;
   if (!meta) return null;
   if (meta.simulated) return <Pill tone="var(--color-focus)">Simulated +{meta.tempOffset} °C</Pill>;
-  if (meta.forecastStale) return <Pill tone="var(--color-risk-3)">Cached forecast</Pill>;
-  return <Pill tone="var(--color-risk-3)">Live · {meta.source}</Pill>;
+  if (meta.forecastStale) return <Pill tone="var(--color-ink-3)">Cached forecast</Pill>;
+  return <Pill tone="var(--color-accent)">Live · {meta.source}</Pill>;
 }
 
 function Pill({ tone, children }: { tone: string; children: React.ReactNode }) {
@@ -275,7 +278,7 @@ function Summary({
               aria-pressed={tempOffset === s.offset}
               className={`tabular rounded-pill px-sm py-2xs text-xs whitespace-nowrap transition-colors duration-[var(--dur-fast)] ${
                 tempOffset === s.offset
-                  ? 'bg-accent text-accent-ink'
+                  ? 'border border-accent/45 bg-accent/15 text-accent'
                   : 'border border-hairline text-ink-3 hover:text-ink'
               }`}
             >
@@ -317,7 +320,7 @@ function Summary({
 
 function Legend() {
   return (
-    <div className="pointer-events-none absolute top-sm left-sm z-10 rounded-md border border-hairline bg-paper/85 p-sm backdrop-blur-sm lg:top-auto lg:bottom-lg lg:left-lg">
+    <div className="pointer-events-none absolute top-sm left-sm z-10 rounded-md border border-hairline bg-paper/85 p-sm backdrop-blur-sm lg:top-auto lg:bottom-[2.6rem] lg:left-lg">
       <div className="flex items-end gap-2xs">
         {RISK_BANDS.map((b) => (
           <div key={b.key} className="w-[46px]">

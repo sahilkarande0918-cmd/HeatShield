@@ -3,23 +3,24 @@ import type { StyleSpecification } from 'maplibre-gl';
 /**
  * A deliberately quiet basemap.
  *
- * OpenFreeMap ships a perfectly good `dark` style, but its neutral blue-greys
- * fight the warm paper of the rest of the app, and — more importantly — a
- * normal basemap is too saturated to sit under a heat ramp. Everything here is
- * desaturated and warm-biased so the risk layer is the only chromatic thing on
- * screen. Roads and water stay legible because a ward officer has to recognise
- * their own neighbourhood.
+ * OpenFreeMap's own `dark` style is too saturated to sit under a heat ramp: a
+ * normal basemap competes with the data drawn on top of it. Everything here is
+ * pulled down to cool, near-neutral chrome so the risk fill is the only
+ * chromatic thing on screen. Roads and water stay legible, because a ward
+ * officer has to be able to recognise their own neighbourhood.
  *
  * Free, keyless, no attribution beyond OSM's licence requirement.
  */
 
-const PAPER = '#120805';
-const WATER = '#161528';
-const GREEN = '#15130c';
-const BUILDING = '#241a14';
-const ROAD = '#2c1f19';
-const ROAD_MAJOR = '#3b2b21';
-const LABEL = '#9b8f87';
+// Chrome, so cool and desaturated to match the rest of the interface. The only
+// warm colour anywhere on the map is the risk fill on top of this.
+const PAPER = '#090d10';
+const WATER = '#111a22';
+const GREEN = '#0f151a';
+const BUILDING = '#1a2129';
+const ROAD = '#232b33';
+const ROAD_MAJOR = '#2f3942';
+const LABEL = '#8b9298';
 
 export function heatShieldMapStyle(): StyleSpecification {
   return {

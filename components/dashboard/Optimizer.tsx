@@ -92,10 +92,11 @@ export default function Optimizer({
   const nothingAtRisk = result !== null && result.totalDemand === 0;
 
   return (
-    <section className="border-t-[3px] border-accent p-lg">
+    <section className="border-t border-hairline p-lg">
       <h2 className="text-xl font-semibold">Where the relief should go</h2>
 
-      {error && <p className="mt-sm text-sm text-risk-2">{error}</p>}
+      {/* Chrome, not data: a failed request is not a heat risk. */}
+      {error && <p className="mt-sm text-sm text-ink">{error}</p>}
 
       {nothingAtRisk ? (
         <p className="mt-sm text-sm text-ink-2">

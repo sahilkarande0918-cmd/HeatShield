@@ -80,7 +80,8 @@ export default function AdvisoryPanel({
         </>
       )}
 
-      {error && <p className="mt-sm text-sm text-risk-2">{error}</p>}
+      {/* Chrome, not data: a failed request is not a heat risk. */}
+      {error && <p className="mt-sm text-sm text-ink">{error}</p>}
 
       {result && (
         <div>

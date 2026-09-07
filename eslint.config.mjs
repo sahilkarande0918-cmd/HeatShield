@@ -14,6 +14,8 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     // Vendored MapLibre worker, copied by scripts/copy-maplibre-worker.mjs.
     "public/maplibre/**",
+    // Standalone CommonJS build script for the pitch deck, not app code.
+    "deck/**",
   ]),
 ]);
 

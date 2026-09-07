@@ -1,12 +1,14 @@
 import type { Metadata } from 'next';
-import { Bricolage_Grotesque, IBM_Plex_Mono, IBM_Plex_Sans } from 'next/font/google';
+import { Archivo, IBM_Plex_Mono, IBM_Plex_Sans } from 'next/font/google';
 import './globals.css';
 
-// Display: wide, slightly industrial — reads as signage, not as a SaaS logotype.
-const bricolage = Bricolage_Grotesque({
-  variable: '--font-bricolage',
+// Display: Archivo, a signage/wayfinding grotesk. Flat-sided and faintly
+// institutional — public infrastructure rather than startup. See the note at
+// the top of globals.css for why not Inter / Geist / Space Grotesk.
+const archivo = Archivo({
+  variable: '--font-archivo',
   subsets: ['latin'],
-  weight: ['600', '700', '800'],
+  weight: ['500', '600', '700'],
 });
 
 // Body + data: Plex was drawn for civic/enterprise work and ships a Devanagari
@@ -33,7 +35,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
     <html
       lang="en"
-      className={`${bricolage.variable} ${plexSans.variable} ${plexMono.variable} h-full antialiased`}
+      className={`${archivo.variable} ${plexSans.variable} ${plexMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
