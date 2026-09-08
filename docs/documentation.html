@@ -1,0 +1,934 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>HeatShield — Project Documentation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* =========================================================================
+ * HeatShield documentation.
+ *
+ * Printed on light paper deliberately: the app is dark because it is an
+ * instrument you stare at, but ten dark pages is a bad document and worse
+ * printing. The heat ramp and the cyan accent carry over so it still reads as
+ * the same product.
+ * ====================================================================== */
+:root{
+  --ink:#12161b; --ink-2:#4a545e; --ink-3:#7b858f;
+  --rule:#e2e6ea; --panel:#f5f7f9; --panel-2:#eef2f5;
+  --accent:#0e7490;          /* the app's ice-blue, darkened for paper */
+  --accent-soft:#e0f2f7;
+  --violet:#5b4b8a; --violet-soft:#eeebf6;
+  --r0:#372c68; --r1:#8a2681; --r2:#d32d48; --r3:#f77a00; --r4:#f6d32b;
+  --display:'Archivo',system-ui,sans-serif;
+  --body:'IBM Plex Sans',system-ui,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{font-family:var(--body);color:var(--ink);font-size:10.4pt;line-height:1.56;
+  -webkit-print-color-adjust:exact;print-color-adjust:exact;background:#fff;}
+
+@page{ size:A4; margin:0; }
+
+.page{
+  width:210mm; height:297mm; padding:18mm 17mm 14mm;
+  page-break-after:always; position:relative; overflow:hidden; background:#fff;
+}
+.page:last-child{page-break-after:auto;}
+
+h1,h2,h3,h4{font-family:var(--display);margin:0;letter-spacing:-0.02em;line-height:1.08;}
+h2{font-size:22pt;font-weight:700;}
+h3{font-size:12.6pt;font-weight:600;margin-bottom:2mm;}
+h4{font-size:10.6pt;font-weight:600;}
+p{margin:0 0 3mm;}
+strong{font-weight:600;}
+.lead{font-size:11.6pt;line-height:1.48;color:var(--ink-2);}
+.small{font-size:8.9pt;line-height:1.46;color:var(--ink-3);}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums;}
+
+/* running head + folio */
+.rh{position:absolute;top:9mm;left:17mm;right:17mm;display:flex;justify-content:space-between;
+  font-family:var(--mono);font-size:7.4pt;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);}
+.folio{position:absolute;bottom:8mm;right:17mm;font-family:var(--mono);font-size:8pt;color:var(--ink-3);}
+.folio b{color:var(--accent);font-weight:500;}
+
+.eyebrow{font-family:var(--mono);font-size:8pt;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:2.5mm;}
+.rule{height:1px;background:var(--rule);margin:4.5mm 0;border:0;}
+
+.panel{background:var(--panel);border-radius:3mm;padding:5mm 5.5mm;}
+.panel-v{background:var(--violet-soft);border-radius:3mm;padding:5mm 5.5mm;}
+.panel-a{background:var(--accent-soft);border-radius:3mm;padding:5mm 5.5mm;}
+
+.cols2{display:grid;grid-template-columns:1fr 1fr;gap:6mm;}
+.cols3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5mm;}
+.cols-7-5{display:grid;grid-template-columns:7fr 5fr;gap:7mm;}
+
+table{width:100%;border-collapse:collapse;font-size:9.2pt;}
+th,td{text-align:left;padding:2.7mm 2.5mm;border-bottom:1px solid var(--rule);vertical-align:top;}
+th{font-family:var(--mono);font-size:7.6pt;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);
+  border-bottom:1.5px solid var(--ink);}
+td.num{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap;}
+.yes{color:#15803d;font-weight:600;}
+.no{color:#b91c1c;}
+.part{color:#a16207;}
+
+.stat{font-family:var(--mono);font-size:21pt;font-weight:500;letter-spacing:-0.02em;line-height:1;color:var(--accent);}
+.stat-l{font-family:var(--mono);font-size:7.6pt;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-top:1.5mm;}
+
+ul{margin:0 0 3mm;padding-left:4.5mm;}
+li{margin-bottom:1.8mm;}
+.tight li{margin-bottom:1mm;}
+
+.ramp{display:flex;height:3mm;border-radius:99px;overflow:hidden;}
+.ramp span{flex:1;}
+</style>
+</head>
+<body>
+
+<!-- ==================== 1 · COVER ==================== -->
+<section class="page" style="padding:0;display:flex;flex-direction:column;">
+  <div style="flex:1;padding:30mm 17mm 0;display:flex;flex-direction:column;">
+    <div class="mono" style="font-size:8pt;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3);">
+      Project Documentation &nbsp;·&nbsp; Version 1.0
+    </div>
+    <h1 style="font-family:var(--display);font-size:46pt;font-weight:700;letter-spacing:-0.035em;margin-top:14mm;">
+      HeatShield
+    </h1>
+    <p style="font-family:var(--display);font-size:15pt;font-weight:500;color:var(--accent);margin-top:4mm;">
+      From heatwave alerts to hyperlocal action.
+    </p>
+    <p class="lead" style="max-width:120mm;margin-top:9mm;">
+      A tool that finds the dangerously hot pockets inside an Indian city, predicts them three
+      days ahead, and then works out where to put cooling relief so it protects the most people.
+    </p>
+
+    <div class="ramp" style="width:120mm;margin-top:18mm;">
+      <span style="background:var(--r0)"></span><span style="background:var(--r1)"></span>
+      <span style="background:var(--r2)"></span><span style="background:var(--r3)"></span>
+      <span style="background:var(--r4)"></span>
+    </div>
+    <div class="mono small" style="width:120mm;display:flex;justify-content:space-between;margin-top:1.5mm;letter-spacing:.1em;">
+      <span>LOW RISK</span><span>EXTREME RISK</span>
+    </div>
+
+    <div class="cols3" style="margin-top:auto;margin-bottom:22mm;max-width:158mm;">
+      <div><div class="stat">2</div><div class="stat-l">Cities mapped</div></div>
+      <div><div class="stat">1,464</div><div class="stat-l">Grid cells</div></div>
+      <div><div class="stat">86 lakh</div><div class="stat-l">People covered</div></div>
+    </div>
+  </div>
+
+  <div style="background:var(--panel);padding:9mm 17mm;">
+    <div class="cols2">
+      <div>
+        <div class="mono small" style="letter-spacing:.14em;text-transform:uppercase;">Written for</div>
+        <p style="margin:1.5mm 0 0;font-size:9.6pt;">Anyone picking this project up for the first time — no
+          background in climate science, GIS or web development assumed.</p>
+      </div>
+      <div>
+        <div class="mono small" style="letter-spacing:.14em;text-transform:uppercase;">Built for</div>
+        <p style="margin:1.5mm 0 0;font-size:9.6pt;">PCCOE International Grand Challenge 2026 · Theme: AI for
+          Climate Change · SDG-13.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 2 · CONTENTS + ONE MINUTE ==================== -->
+<section class="page">
+  <div class="rh"><span>HeatShield Documentation</span><span>Contents</span></div>
+
+  <h2>What you are about to read</h2>
+  <p class="lead" style="margin-top:4mm;">Ten pages, in plain English. If you only read one, read this one.</p>
+
+  <div class="cols-7-5" style="margin-top:7mm;">
+    <div>
+      <table>
+        <tr><td class="num" style="width:12mm;color:var(--accent);">01</td><td><strong>Cover</strong></td></tr>
+        <tr><td class="num" style="color:var(--accent);">02</td><td><strong>Contents &amp; the one-minute version</strong> — what this is, in a paragraph</td></tr>
+        <tr><td class="num" style="color:var(--accent);">03</td><td><strong>The problem</strong> — why a citywide heat alert is not enough</td></tr>
+        <tr><td class="num" style="color:var(--accent);">04</td><td><strong>Who it is for</strong> — the people who use it and the people it protects</td></tr>
+        <tr><td class="num" style="color:var(--accent);">05</td><td><strong>How it works</strong> — the whole system in one flowchart</td></tr>
+        <tr><td class="num" style="color:var(--accent);">06</td><td><strong>How the risk score is built</strong> — step by step, with the actual sums</td></tr>
+        <tr><td class="num" style="color:var(--accent);">07</td><td><strong>The optimizer</strong> — the part nobody else builds</td></tr>
+        <tr><td class="num" style="color:var(--accent);">08</td><td><strong>Tech stack</strong> — every piece, and why it is there</td></tr>
+        <tr><td class="num" style="color:var(--accent);">09</td><td><strong>Compared to what exists</strong> — and where we genuinely differ</td></tr>
+        <tr><td class="num" style="color:var(--accent);">10</td><td><strong>Results, limits, what next</strong> — including what we do <em>not</em> claim</td></tr>
+      </table>
+    </div>
+
+    <div class="panel-a">
+      <div class="eyebrow" style="color:var(--accent);">The one-minute version</div>
+      <p style="font-size:9.6pt;">When a heatwave hits an Indian city, the government issues <strong>one warning for
+        the whole city</strong>. But a city is not one temperature. A crowded lane with tin roofs and no
+        trees can be <strong>4–6&nbsp;°C hotter</strong> than a leafy neighbourhood three kilometres away.</p>
+      <p style="font-size:9.6pt;">HeatShield splits a city into 1&nbsp;km squares, scores how dangerous each
+        square is, updates that every day using the live weather forecast, and then answers the
+        question a city official actually has to answer:</p>
+      <p style="font-size:9.6pt;font-weight:600;color:var(--accent);margin-bottom:0;">“I have five water tankers.
+        Where do I send them?”</p>
+    </div>
+  </div>
+
+  <hr class="rule" style="margin-top:8mm;">
+
+  <h3>Three words that appear on every page</h3>
+  <div class="cols3" style="margin-top:3mm;">
+    <div class="panel">
+      <h4>Grid cell</h4>
+      <p class="small" style="margin-bottom:0;">One square of the city, roughly 1&nbsp;km × 1&nbsp;km. Pune is
+        cut into 744 of them. Every number in this tool is calculated per cell, not per city.</p>
+    </div>
+    <div class="panel">
+      <h4>Vulnerability</h4>
+      <p class="small" style="margin-bottom:0;">How bad heat <em>would</em> be here — because of buildings,
+        missing trees and how many people live here. It does not change day to day.</p>
+    </div>
+    <div class="panel">
+      <h4>Risk</h4>
+      <p class="small" style="margin-bottom:0;">Vulnerability <em>plus</em> today's actual weather. This is the
+        number that changes daily and the one the map shows.</p>
+    </div>
+  </div>
+
+  <div class="panel-v" style="margin-top:6mm;">
+    <p style="margin-bottom:0;font-size:9.6pt;"><strong>The one sentence to remember:</strong> heat
+      <em>mapping</em> in India is already solved by several good projects — heat <em>action</em> is not.
+      HeatShield is built to close that gap.</p>
+  </div>
+
+  <div class="folio">Page <b>02</b> / 10</div>
+</section>
+
+<!-- ==================== 3 · THE PROBLEM ==================== -->
+<section class="page">
+  <div class="rh"><span>HeatShield Documentation</span><span>03 · The Problem</span></div>
+
+  <div class="eyebrow">Why this needs to exist</div>
+  <h2>One alert for a city that is not<br>one temperature</h2>
+
+  <div class="cols-7-5" style="margin-top:6mm;">
+    <div>
+      <p>Heat is one of India's fastest-growing climate killers, and the response has a specific,
+        fixable weakness: it is issued at <strong>city scale</strong>, while the danger exists at
+        <strong>street scale</strong>.</p>
+      <p>When the weather department forecasts 42&nbsp;°C for Pune, that is one number for 3.1 million
+        people spread across 700-odd square kilometres. Inside that city:</p>
+      <ul>
+        <li>A dense lane of tin-roofed houses with no tree cover traps heat and releases it slowly all
+          night. It can run several degrees hotter than the forecast.</li>
+        <li>A planned neighbourhood with parks and older trees can run <em>cooler</em> than the forecast.</li>
+        <li>The hot pockets are usually where the people least able to cope live — outdoor workers,
+          the elderly, families without a fan or a cooler.</li>
+      </ul>
+      <p>So the alert is technically correct and operationally useless. It tells a ward officer that
+        today is dangerous. It does not tell them <strong>which street</strong>.</p>
+
+      <div class="panel" style="margin-top:5mm;">
+        <h4>This is not a theoretical problem</h4>
+        <p class="small" style="margin-bottom:0;">Ahmedabad built South Asia's first Heat Action Plan in 2013
+          after a deadly 2010 heatwave. It is credited with averting roughly 1,100 deaths a year, and it
+          worked well enough that India's National Disaster Management Authority asked 23 heat-prone
+          states to build their own. Those plans save lives — and they still mostly stop at a citywide
+          alert. The intra-city targeting step was never built.</p>
+      </div>
+    </div>
+
+    <!-- FIGURE 1 -->
+    <div>
+      <div class="panel" style="padding:5mm;">
+        <div class="mono small" style="letter-spacing:.12em;text-transform:uppercase;margin-bottom:3mm;">Figure 1 · The gap</div>
+        <svg viewBox="0 0 260 300" width="100%" role="img" aria-label="A uniform citywide alert compared with the actual block-level variation in heat risk">
+          <text x="0" y="10" font-family="IBM Plex Sans" font-size="10" font-weight="600" fill="#4a545e">What the alert says</text>
+          <g>
+            <!-- uniform grid -->
+            <g fill="#f77a00">
+              <rect x="0" y="18" width="46" height="24" rx="2"/><rect x="50" y="18" width="46" height="24" rx="2"/>
+              <rect x="100" y="18" width="46" height="24" rx="2"/><rect x="150" y="18" width="46" height="24" rx="2"/>
+              <rect x="0" y="46" width="46" height="24" rx="2"/><rect x="50" y="46" width="46" height="24" rx="2"/>
+              <rect x="100" y="46" width="46" height="24" rx="2"/><rect x="150" y="46" width="46" height="24" rx="2"/>
+              <rect x="0" y="74" width="46" height="24" rx="2"/><rect x="50" y="74" width="46" height="24" rx="2"/>
+              <rect x="100" y="74" width="46" height="24" rx="2"/><rect x="150" y="74" width="46" height="24" rx="2"/>
+            </g>
+            <text x="204" y="62" font-family="IBM Plex Mono" font-size="9" fill="#7b858f">42 °C</text>
+            <text x="204" y="74" font-family="IBM Plex Mono" font-size="9" fill="#7b858f">everywhere</text>
+          </g>
+
+          <text x="0" y="128" font-family="IBM Plex Sans" font-size="10" font-weight="600" fill="#b91c1c">What is actually happening</text>
+          <g>
+            <rect x="0" y="136" width="46" height="24" rx="2" fill="#8a2681"/><rect x="50" y="136" width="46" height="24" rx="2" fill="#d32d48"/>
+            <rect x="100" y="136" width="46" height="24" rx="2" fill="#372c68"/><rect x="150" y="136" width="46" height="24" rx="2" fill="#8a2681"/>
+            <rect x="0" y="164" width="46" height="24" rx="2" fill="#d32d48"/><rect x="50" y="164" width="46" height="24" rx="2" fill="#f6d32b"/>
+            <rect x="100" y="164" width="46" height="24" rx="2" fill="#f77a00"/><rect x="150" y="164" width="46" height="24" rx="2" fill="#372c68"/>
+            <rect x="0" y="192" width="46" height="24" rx="2" fill="#372c68"/><rect x="50" y="192" width="46" height="24" rx="2" fill="#f77a00"/>
+            <rect x="100" y="192" width="46" height="24" rx="2" fill="#d32d48"/><rect x="150" y="192" width="46" height="24" rx="2" fill="#8a2681"/>
+            <!-- callout -->
+            <path d="M73 176 L 210 150" stroke="#12161b" stroke-width="0.8" fill="none"/>
+            <circle cx="73" cy="176" r="3.5" fill="none" stroke="#12161b" stroke-width="1.2"/>
+            <text x="196" y="146" font-family="IBM Plex Mono" font-size="8.5" fill="#12161b" text-anchor="end" opacity="0">x</text>
+          </g>
+          <text x="0" y="238" font-family="IBM Plex Sans" font-size="9" fill="#4a545e">The circled block feels like</text>
+          <text x="0" y="252" font-family="IBM Plex Mono" font-size="14" font-weight="500" fill="#b91c1c">48 °C</text>
+          <text x="0" y="270" font-family="IBM Plex Sans" font-size="9" fill="#4a545e">— six degrees above the</text>
+          <text x="0" y="282" font-family="IBM Plex Sans" font-size="9" fill="#4a545e">number on the news.</text>
+        </svg>
+      </div>
+      <p class="small" style="margin-top:3mm;">Same city, same hour. The warning is uniform; the danger is not.</p>
+    </div>
+  </div>
+
+  <hr class="rule" style="margin-top:7mm;">
+
+  <h3>Why this particular gap is worth attacking</h3>
+  <div class="cols3" style="margin-top:4mm;">
+    <div class="panel">
+      <h4 style="margin-bottom:2mm;">The danger is predictable</h4>
+      <p class="small" style="margin-bottom:0;">Unlike an earthquake, a heatwave is forecast days ahead. The
+        information to act early already exists — it is simply not resolved finely enough to act
+        <em>locally</em>.</p>
+    </div>
+    <div class="panel">
+      <h4 style="margin-bottom:2mm;">The hot spots barely move</h4>
+      <p class="small" style="margin-bottom:0;">Buildings and missing trees do not change week to week. The
+        expensive half of the calculation can be done once and reused every day after.</p>
+    </div>
+    <div class="panel">
+      <h4 style="margin-bottom:2mm;">The response is already funded</h4>
+      <p class="small" style="margin-bottom:0;">Cities already own tankers, halls and staff. This is not a
+        request for more money — it is a question of aiming what already exists.</p>
+    </div>
+  </div>
+
+  <div class="folio">Page <b>03</b> / 10</div>
+</section>
+
+<!-- ==================== 4 · WHO IT IS FOR ==================== -->
+<section class="page">
+  <div class="rh"><span>HeatShield Documentation</span><span>04 · Who It Is For</span></div>
+
+  <div class="eyebrow">Audience</div>
+  <h2>Two groups: who uses it,<br>and who it protects</h2>
+
+  <div class="cols2" style="margin-top:6mm;">
+    <div class="panel-a">
+      <div class="mono small" style="letter-spacing:.12em;text-transform:uppercase;color:var(--accent);">Group 1 · The users</div>
+      <h3 style="margin-top:2mm;">People who decide where resources go</h3>
+      <p class="small">They open the dashboard. They are not data scientists — they are administrators with
+        a budget, a map and a bad week ahead.</p>
+      <ul class="tight small" style="margin-bottom:0;">
+        <li><strong>Municipal disaster management cells</strong> — the office that actually deploys tankers,
+          opens relief centres and issues local warnings.</li>
+        <li><strong>City health departments</strong> — who need to know which health posts to stock and which
+          neighbourhoods to send ASHA workers into.</li>
+        <li><strong>Ward officers</strong> — the person on the ground with four tankers and two community
+          halls, deciding on a Monday morning.</li>
+        <li><strong>Urban planners</strong> — who can see, over time, which wards keep appearing in the
+          danger band and need trees or shade structures.</li>
+      </ul>
+    </div>
+
+    <div class="panel-v">
+      <div class="mono small" style="letter-spacing:.12em;text-transform:uppercase;color:var(--violet);">Group 2 · The beneficiaries</div>
+      <h3 style="margin-top:2mm;">People who never open the app</h3>
+      <p class="small">They benefit because relief arrives closer to them. They are the reason the scoring
+        weights population the way it does.</p>
+      <ul class="tight small" style="margin-bottom:0;">
+        <li><strong>Outdoor workers</strong> — construction labour, street vendors, delivery riders,
+          traffic police. Working through the hottest hours is not optional for them.</li>
+        <li><strong>Elderly residents</strong>, especially those living alone, whose bodies regulate
+          temperature poorly and who may not seek help.</li>
+        <li><strong>Infants and pregnant women</strong>, both at elevated medical risk in extreme heat.</li>
+        <li><strong>Households without cooling</strong> — where a fan is the only defence and a power cut
+          removes even that.</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr class="rule">
+
+  <h3>A day in the life — what actually happens</h3>
+  <div style="margin-top:4mm;">
+    <svg viewBox="0 0 700 132" width="100%" role="img" aria-label="Five step user journey from morning check to relief deployed">
+      <defs>
+        <marker id="ar" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+          <path d="M0,0 L7,3.5 L0,7 z" fill="#7b858f"/>
+        </marker>
+      </defs>
+      <g font-family="IBM Plex Sans" font-size="9.5">
+        <g>
+          <rect x="0" y="14" width="122" height="66" rx="5" fill="#f5f7f9"/>
+          <text x="10" y="34" font-family="IBM Plex Mono" font-size="9" fill="#0e7490">07:30</text>
+          <text x="10" y="50" font-weight="600" fill="#12161b">Officer opens</text>
+          <text x="10" y="63" font-weight="600" fill="#12161b">the map</text>
+        </g>
+        <line x1="126" y1="47" x2="140" y2="47" stroke="#7b858f" stroke-width="1.2" marker-end="url(#ar)"/>
+        <g>
+          <rect x="144" y="14" width="122" height="66" rx="5" fill="#f5f7f9"/>
+          <text x="154" y="34" font-family="IBM Plex Mono" font-size="9" fill="#0e7490">07:31</text>
+          <text x="154" y="50" font-weight="600" fill="#12161b">Sees today's</text>
+          <text x="154" y="63" font-weight="600" fill="#12161b">hot pockets</text>
+        </g>
+        <line x1="270" y1="47" x2="284" y2="47" stroke="#7b858f" stroke-width="1.2" marker-end="url(#ar)"/>
+        <g>
+          <rect x="288" y="14" width="122" height="66" rx="5" fill="#e0f2f7"/>
+          <text x="298" y="34" font-family="IBM Plex Mono" font-size="9" fill="#0e7490">07:35</text>
+          <text x="298" y="50" font-weight="600" fill="#12161b">Asks: where do</text>
+          <text x="298" y="63" font-weight="600" fill="#12161b">5 tankers go?</text>
+        </g>
+        <line x1="414" y1="47" x2="428" y2="47" stroke="#7b858f" stroke-width="1.2" marker-end="url(#ar)"/>
+        <g>
+          <rect x="432" y="14" width="122" height="66" rx="5" fill="#e0f2f7"/>
+          <text x="442" y="34" font-family="IBM Plex Mono" font-size="9" fill="#0e7490">07:36</text>
+          <text x="442" y="50" font-weight="600" fill="#12161b">Copies the ward</text>
+          <text x="442" y="63" font-weight="600" fill="#12161b">advisory text</text>
+        </g>
+        <line x1="558" y1="47" x2="572" y2="47" stroke="#7b858f" stroke-width="1.2" marker-end="url(#ar)"/>
+        <g>
+          <rect x="576" y="14" width="124" height="66" rx="5" fill="#eeebf6"/>
+          <text x="586" y="34" font-family="IBM Plex Mono" font-size="9" fill="#5b4b8a">09:00</text>
+          <text x="586" y="50" font-weight="600" fill="#12161b">Water is where</text>
+          <text x="586" y="63" font-weight="600" fill="#12161b">the people are</text>
+        </g>
+        <text x="0" y="108" font-size="9" fill="#7b858f">Total time from opening the tool to having a defensible deployment plan: under ten minutes.</text>
+        <text x="0" y="122" font-size="9" fill="#7b858f">No GIS training, no spreadsheet, no data team.</text>
+      </g>
+    </svg>
+  </div>
+
+  <hr class="rule">
+
+  <h3>What each group needs, and where the tool answers it</h3>
+  <table style="margin-top:3mm;font-size:8.9pt;">
+    <thead><tr><th style="width:40mm;">Who</th><th style="width:58mm;">What they need to know</th><th>Where the tool answers it</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Ward officer</strong></td><td class="small">“Which streets in my ward are worst today?”</td><td class="small">The map, zoomed to their ward — click any square for its breakdown.</td></tr>
+      <tr><td><strong>Disaster management cell</strong></td><td class="small">“Where do the tankers and relief centres go?”</td><td class="small">The optimizer panel — a ranked list of placements and the people each one reaches.</td></tr>
+      <tr><td><strong>Health department</strong></td><td class="small">“Which health posts should be stocked, and when?”</td><td class="small">The 72-hour trend chart — shows which day the worst square crosses the relief threshold.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="folio">Page <b>04</b> / 10</div>
+</section>
+
+<!-- ==================== 5 · HOW IT WORKS ==================== -->
+<section class="page">
+  <div class="rh"><span>HeatShield Documentation</span><span>05 · How It Works</span></div>
+
+  <div class="eyebrow">System architecture</div>
+  <h2>The whole system, in one picture</h2>
+  <p class="lead" style="margin-top:3mm;max-width:150mm;">Read it left to right. Two kinds of information come in
+    on the left, they are combined in the middle, and three useful things come out on the right.</p>
+
+  <div style="margin-top:6mm;">
+    <svg viewBox="0 0 700 300" width="100%" role="img" aria-label="Architecture: two data sources merge into a risk engine which feeds a map, an optimizer and an advisory generator">
+      <defs>
+        <marker id="a2" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+          <path d="M0,0 L8,4 L0,8 z" fill="#7b858f"/>
+        </marker>
+      </defs>
+      <g font-family="IBM Plex Sans">
+        <!-- column labels -->
+        <text x="0" y="10" font-family="IBM Plex Mono" font-size="8" letter-spacing="1.2" fill="#7b858f">DATA IN</text>
+        <text x="252" y="10" font-family="IBM Plex Mono" font-size="8" letter-spacing="1.2" fill="#7b858f">THE ENGINE</text>
+        <text x="470" y="10" font-family="IBM Plex Mono" font-size="8" letter-spacing="1.2" fill="#7b858f">WHAT YOU GET</text>
+
+        <!-- inputs -->
+        <rect x="0" y="24" width="196" height="88" rx="5" fill="#fdf3d6" stroke="#f0dda4"/>
+        <text x="12" y="44" font-size="10.5" font-weight="600" fill="#12161b">The city as it is built</text>
+        <text x="12" y="60" font-size="8.8" fill="#4a545e">Buildings, parks and water from</text>
+        <text x="12" y="72" font-size="8.8" fill="#4a545e">OpenStreetMap; population from</text>
+        <text x="12" y="84" font-size="8.8" fill="#4a545e">Census 2011.</text>
+        <text x="12" y="102" font-family="IBM Plex Mono" font-size="8" fill="#7b858f">Calculated ONCE per city</text>
+
+        <rect x="0" y="126" width="196" height="88" rx="5" fill="#fdf3d6" stroke="#f0dda4"/>
+        <text x="12" y="146" font-size="10.5" font-weight="600" fill="#12161b">Tomorrow's weather</text>
+        <text x="12" y="162" font-size="8.8" fill="#4a545e">Temperature and humidity for the</text>
+        <text x="12" y="174" font-size="8.8" fill="#4a545e">next 72 hours, from Open-Meteo,</text>
+        <text x="12" y="186" font-size="8.8" fill="#4a545e">at 16 points across the city.</text>
+        <text x="12" y="204" font-family="IBM Plex Mono" font-size="8" fill="#7b858f">Refreshed EVERY HOUR</text>
+
+        <line x1="200" y1="68" x2="246" y2="105" stroke="#7b858f" stroke-width="1.3" marker-end="url(#a2)"/>
+        <line x1="200" y1="170" x2="246" y2="133" stroke="#7b858f" stroke-width="1.3" marker-end="url(#a2)"/>
+
+        <!-- engine -->
+        <rect x="252" y="60" width="180" height="118" rx="5" fill="#8c1d18"/>
+        <text x="264" y="82" font-size="11" font-weight="600" fill="#ffffff">Risk engine</text>
+        <text x="264" y="102" font-size="8.8" fill="#f2d3d0">Gives every 1 km square a</text>
+        <text x="264" y="114" font-size="8.8" fill="#f2d3d0">score from 0 to 100 for</text>
+        <text x="264" y="126" font-size="8.8" fill="#f2d3d0">today, and for each of the</text>
+        <text x="264" y="138" font-size="8.8" fill="#f2d3d0">next 72 hours.</text>
+        <text x="264" y="160" font-family="IBM Plex Mono" font-size="8" fill="#f0c9c6">Page 06 explains the sum</text>
+
+        <line x1="436" y1="119" x2="468" y2="58" stroke="#7b858f" stroke-width="1.3" marker-end="url(#a2)"/>
+        <line x1="436" y1="119" x2="468" y2="119" stroke="#7b858f" stroke-width="1.3" marker-end="url(#a2)"/>
+        <line x1="436" y1="119" x2="468" y2="180" stroke="#7b858f" stroke-width="1.3" marker-end="url(#a2)"/>
+
+        <!-- outputs -->
+        <rect x="474" y="24" width="226" height="64" rx="5" fill="#f5f7f9"/>
+        <text x="486" y="44" font-size="10.5" font-weight="600" fill="#12161b">1 · The interactive map</text>
+        <text x="486" y="60" font-size="8.8" fill="#4a545e">Every square coloured by today's risk.</text>
+        <text x="486" y="72" font-size="8.8" fill="#4a545e">Click one to see why it scores that.</text>
+
+        <rect x="474" y="94" width="226" height="64" rx="5" fill="#e0f2f7"/>
+        <text x="486" y="114" font-size="10.5" font-weight="600" fill="#12161b">2 · The siting optimizer</text>
+        <text x="486" y="130" font-size="8.8" fill="#4a545e">“Given 5 new relief points, here is</text>
+        <text x="486" y="142" font-size="8.8" fill="#4a545e">where they should go.” — page 07</text>
+
+        <rect x="474" y="164" width="226" height="64" rx="5" fill="#eeebf6"/>
+        <text x="486" y="184" font-size="10.5" font-weight="600" fill="#12161b">3 · The ward advisory</text>
+        <text x="486" y="200" font-size="8.8" fill="#4a545e">A short plain-language notice an</text>
+        <text x="486" y="212" font-size="8.8" fill="#4a545e">officer can forward, written by AI.</text>
+
+        <!-- footnote band -->
+        <rect x="0" y="248" width="700" height="44" rx="5" fill="#f5f7f9"/>
+        <text x="14" y="266" font-size="9.5" font-weight="600" fill="#12161b">Why the split matters:</text>
+        <text x="132" y="266" font-size="9.5" fill="#4a545e">the left-hand box is slow to compute but almost never changes. The right-hand</text>
+        <text x="14" y="280" font-size="9.5" fill="#4a545e">box changes hourly but is cheap. Separating them is why the map can be live without being expensive.</text>
+      </g>
+    </svg>
+  </div>
+
+  <hr class="rule" style="margin-top:7mm;">
+
+  <div class="cols-7-5">
+    <div>
+      <h3>What happens when you click a square</h3>
+      <p class="small">The map never asks you to trust a number you cannot open up. Clicking any square shows
+        the whole chain that produced its score:</p>
+      <ul class="tight small" style="margin-bottom:0;">
+        <li>The <strong>risk band</strong> in plain words — “Severe: relief centres should open, restrict
+          outdoor work 12:00–16:00.”</li>
+        <li>How many <strong>people live there</strong>, and what it <strong>feels like</strong> versus the
+          regional forecast.</li>
+        <li>The three ingredients — built-up density, green cover, distance to water — each as a bar, so you
+          can see <em>why</em> this square scores what it does.</li>
+        <li>A button to draft the ward advisory for that exact neighbourhood.</li>
+      </ul>
+    </div>
+    <div class="panel-a">
+      <h4 style="margin-bottom:2mm;">Why it stays fast</h4>
+      <p class="small">The static layer is read from memory rather than fetched per request, and the forecast is
+        cached for an hour. Dragging the time slider recomputes 744 squares and redraws the map in a few hundred
+        milliseconds.</p>
+      <p class="small" style="margin-bottom:0;">If the weather service is slow or down, the app serves the last
+        good forecast and labels it “cached” rather than showing a spinner or, worse, a blank map.</p>
+    </div>
+  </div>
+
+  <div class="cols3" style="margin-top:6mm;">
+    <div class="panel"><div class="stat">Once</div><div class="stat-l">The city layer is computed per city, then reused</div></div>
+    <div class="panel"><div class="stat">Hourly</div><div class="stat-l">The forecast refreshes on its own</div></div>
+    <div class="panel"><div class="stat">Instantly</div><div class="stat-l">The map recomputes as you move the slider</div></div>
+  </div>
+
+  <div class="folio">Page <b>05</b> / 10</div>
+</section>
+
+<!-- ==================== 6 · THE RISK SCORE ==================== -->
+<section class="page">
+  <div class="rh"><span>HeatShield Documentation</span><span>06 · The Risk Score</span></div>
+
+  <div class="eyebrow">The maths, without the jargon</div>
+  <h2>How one square gets its score</h2>
+
+  <div class="cols-7-5" style="margin-top:6mm;">
+    <div>
+      <h3>Step 1 — What is built here (done once)</h3>
+      <p class="small">For each 1&nbsp;km square we count three things from free public data:</p>
+      <table style="margin-bottom:4mm;">
+        <tr><td style="width:34mm;"><strong>Buildings</strong></td><td class="small">How many building footprints are inside the square. More concrete means more heat stored and released at night.</td></tr>
+        <tr><td><strong>Green cover</strong></td><td class="small">How much of the square is park, forest or grass. Trees cool by shading and evaporation.</td></tr>
+        <tr><td><strong>Water nearby</strong></td><td class="small">How close the nearest lake or river is. Water cools its surroundings, but only for about a kilometre.</td></tr>
+      </table>
+      <p class="small">These are blended into a single <strong>heat proxy</strong>, then every square is ranked
+        against every other square in the same city.</p>
+
+      <h3 style="margin-top:5mm;">Step 2 — Who is here</h3>
+      <p class="small">The city's Census population is spread across the squares in proportion to how many
+        buildings each one has. A square with 5% of the city's buildings gets about 5% of its people. This is a
+        standard technique called <em>dasymetric mapping</em>.</p>
+      <p class="small">Heat proxy and population density are combined into <strong>vulnerability</strong>,
+        scored 0–100. This never changes day to day.</p>
+
+      <h3 style="margin-top:5mm;">Step 3 — Add today's weather</h3>
+      <p class="small">Three sub-steps, and this is where the number becomes live:</p>
+      <ul class="tight small">
+        <li>The forecast is a regional number, so each square gets an <strong>urban heat island bump</strong>
+          of up to +4&nbsp;°C, scaled by how built-up it is. That gives a “feels like here” temperature.</li>
+        <li>That temperature is scored against the internationally used <strong>heat index danger bands</strong>
+          — below 27&nbsp;°C is no risk, 41&nbsp;°C is “danger”, 54&nbsp;°C is the top of the published scale.</li>
+        <li>The result is then weighted by vulnerability, because the same 45&nbsp;°C is a worse emergency in
+          a crowded block than on an empty ridge.</li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="panel" style="padding:5mm;">
+        <div class="mono small" style="letter-spacing:.12em;text-transform:uppercase;margin-bottom:3mm;">Figure 3 · A worked example</div>
+        <table style="font-size:8.6pt;">
+          <tr><td>Regional forecast</td><td class="num" style="text-align:right;">37.7 °C</td></tr>
+          <tr><td>+ heat island bump</td><td class="num" style="text-align:right;color:var(--r2);">+3.1 °C</td></tr>
+          <tr><td><strong>Feels like here</strong></td><td class="num" style="text-align:right;font-weight:600;">40.8 °C</td></tr>
+          <tr><td>Heat-index stress</td><td class="num" style="text-align:right;">53 / 100</td></tr>
+          <tr><td>Vulnerability here</td><td class="num" style="text-align:right;">79 / 100</td></tr>
+          <tr style="background:#fff;"><td><strong>Final risk score</strong></td><td class="num" style="text-align:right;font-weight:600;color:var(--r3);">64 — Severe</td></tr>
+        </table>
+        <p class="small" style="margin:3mm 0 0;">Real output from a cell in Pune. Every one of these numbers is
+          shown in the app when you click a square — the tool never asks you to trust a score you cannot open up.</p>
+      </div>
+
+      <div class="panel-a" style="margin-top:5mm;padding:5mm;">
+        <h4 style="margin-bottom:2mm;">Why ranking, not raw values</h4>
+        <p class="small" style="margin-bottom:0;">Our first attempt scaled scores between the lowest and highest
+          building count. Because a few squares have enormous counts, that pushed the <em>median</em> square to
+          76/100 — the whole city painted “severe”, which is exactly the failure this project exists to fix.
+          Ranking each square against the others instead gives a proper spread: in Pune the 10th, 50th and 90th
+          percentile squares now score 12, 50 and 91.</p>
+      </div>
+
+      <div class="panel-v" style="margin-top:5mm;padding:5mm;">
+        <h4 style="margin-bottom:2mm;">A colour choice that matters</h4>
+        <div class="ramp" style="margin:2mm 0 3mm;">
+          <span style="background:var(--r0)"></span><span style="background:var(--r1)"></span>
+          <span style="background:var(--r2)"></span><span style="background:var(--r3)"></span>
+          <span style="background:var(--r4)"></span>
+        </div>
+        <p class="small" style="margin-bottom:0;">The scale gets steadily <em>brighter</em> as risk rises, not just
+          redder. That means it still works for red–green colourblind readers and in black-and-white printouts —
+          which the usual green-to-red heat map does not.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="folio">Page <b>06</b> / 10</div>
+</section>
+
+<!-- ==================== 7 · THE OPTIMIZER ==================== -->
+<section class="page">
+  <div class="rh"><span>HeatShield Documentation</span><span>07 · The Optimizer</span></div>
+
+  <div class="eyebrow">The differentiating feature</div>
+  <h2>Where should the water go?</h2>
+  <p class="lead" style="margin-top:3mm;max-width:155mm;">Every other part of this project exists to make this
+    question answerable. This is the piece comparable tools do not attempt.</p>
+
+  <div class="cols-7-5" style="margin-top:6mm;">
+    <div>
+      <h3>The idea in one paragraph</h3>
+      <p class="small">You have a city full of squares, each with a risk score and a population. You already have
+        some relief — public water points. And you have a budget: say five new places you could set one up.
+        The optimizer tries to pick the five that bring the <strong>most currently-unreached at-risk people</strong>
+        within a short walk of relief.</p>
+
+      <h3 style="margin-top:5mm;">Why “greedy”?</h3>
+      <p class="small">The algorithm takes the single best option available at each step, then re-checks. It
+        does not try every combination — with 744 possible spots that would be billions of comparisons.</p>
+      <p class="small">For coverage problems of this shape that shortcut is mathematically well understood: it
+        is guaranteed to land within about <strong>63% of the theoretically perfect answer</strong>, and it runs
+        in roughly <strong>40 milliseconds</strong>. That speed is what lets the map redraw the instant you drag
+        the budget slider, which is what makes it feel like a tool rather than a report.</p>
+      <p class="small" style="margin-bottom:0;">It is also explainable one site at a time — “this one reaches
+        41,000 people nobody currently reaches” — which matters when someone has to justify the decision.</p>
+    </div>
+
+    <div>
+      <div class="panel-a" style="padding:5mm;">
+        <div class="mono small" style="letter-spacing:.12em;text-transform:uppercase;margin-bottom:3mm;color:var(--accent);">Figure 4 · Pune, heatwave scenario</div>
+        <div class="small" style="margin-bottom:1.5mm;">Reached by relief that exists today</div>
+        <div style="height:7mm;background:#dfe5ea;border-radius:99px;overflow:hidden;">
+          <div style="width:9.4%;height:100%;background:#7b858f;"></div>
+        </div>
+        <div class="mono" style="font-size:8.5pt;margin-top:1.5mm;">9.4% &nbsp;·&nbsp; 1,17,927 people</div>
+
+        <div class="small" style="margin:4mm 0 1.5mm;">With five optimally placed new points</div>
+        <div style="height:7mm;background:#dfe5ea;border-radius:99px;overflow:hidden;">
+          <div style="width:26.2%;height:100%;background:#0e7490;"></div>
+        </div>
+        <div class="mono" style="font-size:8.5pt;margin-top:1.5mm;color:var(--accent);">26.2% &nbsp;·&nbsp; 3,28,098 people</div>
+
+        <div style="margin-top:5mm;padding-top:4mm;border-top:1px solid #cfe3ea;">
+          <div class="stat" style="font-size:22pt;">+2,10,171</div>
+          <div class="stat-l">More people reached, from five placements</div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:4mm;padding:4.5mm;">
+        <h4 style="margin-bottom:2mm;">One honest assumption, made visible</h4>
+        <p class="small">OpenStreetMap lists 714 hospitals and 450 clinics in Pune. If we counted all of them as
+          “heat relief”, existing coverage jumps to 94% and the whole question looks solved.</p>
+        <p class="small" style="margin-bottom:0;">But a private clinic is not a cooling shelter, and a hospital is
+          where you go <em>after</em> heatstroke, not to avoid it. So the default counts only the
+          <strong>26 public water points</strong> Pune has mapped for 3.1 million people — and the dashboard
+          exposes this as a switch, so anyone can disagree with us and see the other answer.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:4.5mm;">How it decides, step by step</h3>
+  <svg viewBox="0 0 700 150" width="100%" style="margin-top:2mm;" role="img" aria-label="Horizontal flowchart of the greedy selection loop with a repeat arrow">
+    <defs>
+      <marker id="a4" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+        <path d="M0,0 L8,4 L0,8 z" fill="#7b858f"/>
+      </marker>
+    </defs>
+    <g font-family="IBM Plex Sans" font-size="9.6">
+      <rect x="0" y="18" width="150" height="52" rx="5" fill="#f5f7f9"/>
+      <text x="12" y="38" font-weight="600" fill="#12161b">1 · Start</text>
+      <text x="12" y="54" font-size="8.8" fill="#4a545e">Mark everyone already near</text>
+      <text x="12" y="65" font-size="8.8" fill="#4a545e">a water point as covered.</text>
+      <line x1="154" y1="44" x2="172" y2="44" stroke="#7b858f" stroke-width="1.3" marker-end="url(#a4)"/>
+
+      <rect x="176" y="18" width="150" height="52" rx="5" fill="#e0f2f7"/>
+      <text x="188" y="38" font-weight="600" fill="#12161b">2 · Score every spot</text>
+      <text x="188" y="54" font-size="8.8" fill="#4a545e">Count the at-risk people</text>
+      <text x="188" y="65" font-size="8.8" fill="#4a545e">nobody reaches yet.</text>
+      <line x1="330" y1="44" x2="348" y2="44" stroke="#7b858f" stroke-width="1.3" marker-end="url(#a4)"/>
+
+      <rect x="352" y="18" width="150" height="52" rx="5" fill="#e0f2f7"/>
+      <text x="364" y="38" font-weight="600" fill="#12161b">3 · Take the best</text>
+      <text x="364" y="54" font-size="8.8" fill="#4a545e">Add that one site. Mark its</text>
+      <text x="364" y="65" font-size="8.8" fill="#4a545e">people covered.</text>
+      <line x1="506" y1="44" x2="524" y2="44" stroke="#7b858f" stroke-width="1.3" marker-end="url(#a4)"/>
+
+      <rect x="528" y="18" width="172" height="52" rx="5" fill="#eeebf6"/>
+      <text x="540" y="38" font-weight="600" fill="#12161b">4 · Budget used up?</text>
+      <text x="540" y="54" font-size="8.8" fill="#4a545e">Or nobody left to help?</text>
+
+      <!-- repeat loop, routed below so it crosses nothing -->
+      <path d="M614 74 L 614 104 L 251 104 L 251 74" stroke="#7b858f" stroke-width="1.3" fill="none" marker-end="url(#a4)"/>
+      <rect x="368" y="94" width="128" height="19" rx="3" fill="#ffffff"/>
+      <text x="432" y="107" text-anchor="middle" font-family="IBM Plex Mono" font-size="8.6" fill="#7b858f">NO — go round again</text>
+
+      <path d="M700 44 L 700 130 L 0 130" stroke="#8c1d18" stroke-width="0" fill="none"/>
+      <rect x="0" y="122" width="700" height="26" rx="5" fill="#8c1d18"/>
+      <text x="12" y="139" fill="#ffffff" font-size="9.6">YES — return the ranked list of placements, each with the number of people it reaches</text>
+    </g>
+  </svg>
+
+  <div class="folio">Page <b>07</b> / 10</div>
+</section>
+
+<!-- ==================== 8 · TECH STACK ==================== -->
+<section class="page">
+  <div class="rh"><span>HeatShield Documentation</span><span>08 · Tech Stack</span></div>
+
+  <div class="eyebrow">What it is built from</div>
+  <h2>Every piece, and why it is there</h2>
+  <p class="lead" style="margin-top:3mm;max-width:150mm;">Everything below is free. There is no paid service
+    anywhere in this project — deliberately, so a municipality could run it without a procurement process.</p>
+
+  <table style="margin-top:5mm;font-size:8.9pt;">
+    <thead><tr><th style="width:34mm;">Piece</th><th style="width:30mm;">What it is</th><th>Why we chose it</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Next.js + TypeScript</strong></td><td class="small">The website and the server, in one</td>
+        <td class="small">One language front to back. TypeScript catches mistakes before they reach a user — useful when numbers on screen represent danger.</td></tr>
+      <tr><td><strong>MapLibre GL</strong></td><td class="small">The interactive map</td>
+        <td class="small">Free and open source, no API key, no per-view billing. Draws 744 coloured squares smoothly on a phone.</td></tr>
+      <tr><td><strong>OpenFreeMap</strong></td><td class="small">The street map underneath</td>
+        <td class="small">Free map tiles with no key and no usage cap. We wrote a custom dark style so the streets stay readable under the heat colours.</td></tr>
+      <tr><td><strong>Neon (PostgreSQL)</strong></td><td class="small">The database</td>
+        <td class="small">Stores the grid, facilities, cached forecasts and advisories. Free tier, and it wakes from sleep fast enough for a live demo.</td></tr>
+      <tr><td><strong>Drizzle ORM</strong></td><td class="small">Talks to the database</td>
+        <td class="small">Lightweight and typed, so a wrong column name is a compile error rather than a 3 a.m. bug.</td></tr>
+      <tr><td><strong>Open-Meteo</strong></td><td class="small">The weather forecast</td>
+        <td class="small">Free, no signup, good India coverage. We are explicit that this is <em>not</em> IMD — IMD has no stable public API, and claiming otherwise would be dishonest.</td></tr>
+      <tr><td><strong>OpenStreetMap<br>+ Overpass</strong></td><td class="small">Buildings, parks, hospitals</td>
+        <td class="small">The only openly licensed source detailed enough to see individual buildings in Indian cities. 246,116 buildings pulled for Pune alone.</td></tr>
+      <tr><td><strong>Census of India 2011</strong></td><td class="small">Population totals</td>
+        <td class="small">One official number per city, spread across squares by building count.</td></tr>
+      <tr><td><strong>Google Gemini</strong></td><td class="small">Writes the ward advisories</td>
+        <td class="small">Free tier. Given only the square's real numbers and told to invent nothing — a made-up temperature in a public safety notice is worse than no notice.</td></tr>
+      <tr><td><strong>React Three Fiber<br>+ Recharts</strong></td><td class="small">The 3D surface and the trend chart</td>
+        <td class="small">The chart plots the worst square against the median one, because the gap between those two lines is the whole argument. The 3D surface is used once, as illustration.</td></tr>
+      <tr><td><strong>Vercel</strong></td><td class="small">Where it runs</td>
+        <td class="small">Free hosting that deploys straight from GitHub.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="cols2" style="margin-top:6mm;">
+    <div class="panel">
+      <h4 style="margin-bottom:2mm;">Written by hand, on purpose</h4>
+      <p class="small" style="margin-bottom:0;">The optimizer is our own TypeScript, not a library and not a
+        separate Python service. It is a small, well-understood algorithm; adding a second language to the
+        deployment would have bought nothing and cost a lot of fragility.</p>
+    </div>
+    <div class="panel">
+      <h4 style="margin-bottom:2mm;">Checks that run on every build</h4>
+      <p class="small" style="margin-bottom:0;">The risk model and the optimizer both ship with assert-based
+        self-checks — including one that fails the build if the colour ramp ever stops getting brighter as risk
+        rises, because that is what keeps it colourblind-safe.</p>
+    </div>
+  </div>
+
+  <div class="folio">Page <b>08</b> / 10</div>
+</section>
+
+<!-- ==================== 9 · COMPARISON ==================== -->
+<section class="page">
+  <div class="rh"><span>HeatShield Documentation</span><span>09 · Compared To What Exists</span></div>
+
+  <div class="eyebrow">Honest positioning</div>
+  <h2>What already exists, and<br>where we actually differ</h2>
+  <p class="lead" style="margin-top:2.5mm;max-width:165mm;">We are not claiming to have invented heat mapping. Several Indian projects already do it, some better than we do.</p>
+
+  <table style="margin-top:5mm;font-size:9pt;">
+    <thead>
+      <tr>
+        <th style="width:38mm;">Approach</th>
+        <th style="width:24mm;">Hyperlocal<br>mapping</th>
+        <th style="width:24mm;">Updates<br>daily</th>
+        <th style="width:26mm;">Says where to<br>put relief</th>
+        <th>What it is</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>IMD heat alerts</strong></td>
+        <td class="no">No</td><td class="yes">Yes</td><td class="no">No</td>
+        <td class="small">The official warning system. Accurate, authoritative, and issued for a whole city or district.</td>
+      </tr>
+      <tr>
+        <td><strong>Ahmedabad Heat<br>Action Plan</strong></td>
+        <td class="part">Partly</td><td class="yes">Yes</td><td class="part">Partly</td>
+        <td class="small">The gold standard for response — alert days, hospital readiness, public messaging. Planning is citywide; siting is decided by officials, not computed.</td>
+      </tr>
+      <tr>
+        <td><strong>SEEDS + Microsoft<br>“Sunny Lives”</strong></td>
+        <td class="yes">Yes</td><td class="no">No</td><td class="no">No</td>
+        <td class="small">Excellent building-level AI risk mapping and household warnings. Proves hyperlocal works, then stops at identifying risk.</td>
+      </tr>
+      <tr>
+        <td><strong>IIT Mandi building-<br>level heat maps</strong></td>
+        <td class="yes">Yes</td><td class="no">No</td><td class="no">No</td>
+        <td class="small">Rigorous academic mapping at building resolution. A research output, not an operational tool.</td>
+      </tr>
+      <tr style="background:var(--accent-soft);">
+        <td><strong>HeatShield</strong></td>
+        <td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td>
+        <td class="small">1 km grid on a live 72-hour forecast, plus a coverage optimizer returning ranked placements and a sendable advisory.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <hr class="rule" style="margin:3.5mm 0;">
+
+  <h3>The three things that are genuinely ours</h3>
+  <div class="cols3" style="margin-top:3mm;">
+    <div class="panel-a">
+      <div class="mono" style="font-size:15pt;color:var(--accent);">01</div>
+      <h4 style="margin:2mm 0;">The action layer</h4>
+      <p class="small" style="margin-bottom:0;">Existing work ends at a map. We take the map as the <em>input</em>
+        and produce a decision: coordinates, ranked, with the population each reaches.</p>
+    </div>
+    <div class="panel-a">
+      <div class="mono" style="font-size:15pt;color:var(--accent);">02</div>
+      <h4 style="margin:2mm 0;">Live, not an atlas</h4>
+      <p class="small" style="margin-bottom:0;">Most hyperlocal heat maps are historical — “where is it usually
+        hot”. Ours answers “where is it dangerous <em>this Friday afternoon</em>”.</p>
+    </div>
+    <div class="panel-a">
+      <div class="mono" style="font-size:15pt;color:var(--accent);">03</div>
+      <h4 style="margin:2mm 0;">Built for the last mile</h4>
+      <p class="small" style="margin-bottom:0;">The output is not a dashboard for analysts. It is a paragraph an
+        officer can paste into WhatsApp, naming the real neighbourhood, with three actions for today.</p>
+    </div>
+  </div>
+
+  <div class="panel-v" style="margin-top:4mm;padding:4.5mm 5.5mm;">
+    <p style="margin-bottom:0;font-size:9.2pt;"><strong>Where we are weaker, and we should say so:</strong>
+      SEEDS and IIT Mandi resolve heat at <em>building</em> level using real satellite land-surface temperature.
+      We work at 1&nbsp;km squares using a proxy. Their science is better; our contribution is the step after the
+      map. A better input layer would make our optimizer better, not redundant.</p>
+  </div>
+
+  <div class="folio">Page <b>09</b> / 10</div>
+</section>
+
+<!-- ==================== 10 · RESULTS & LIMITS ==================== -->
+<section class="page">
+  <div class="rh"><span>HeatShield Documentation</span><span>10 · Results &amp; Limits</span></div>
+
+  <div class="eyebrow">Where the project stands</div>
+  <h2>What works, what does not,<br>and what comes next</h2>
+
+  <h3 style="margin-top:6mm;">Built and working today</h3>
+  <div class="cols3" style="margin-top:3mm;">
+    <div class="panel"><div class="stat">1,464</div><div class="stat-l">Grid cells across Pune and Ahmedabad</div></div>
+    <div class="panel"><div class="stat">246,116</div><div class="stat-l">Building footprints processed for Pune</div></div>
+    <div class="panel"><div class="stat">~40 ms</div><div class="stat-l">To recompute the optimizer live</div></div>
+  </div>
+  <ul class="tight small" style="margin-top:4mm;">
+    <li>A working dashboard with a live, clickable ward-level risk map for two Indian cities.</li>
+    <li>A 72-hour forecast fused into the risk surface, refreshed hourly, with a trend chart.</li>
+    <li>A siting optimizer with a before-and-after coverage comparison.</li>
+    <li>AI-drafted advisories, named to the real neighbourhood, cached per area per day.</li>
+  </ul>
+
+  <hr class="rule">
+
+  <h3>What we deliberately do not claim</h3>
+  <div class="cols2" style="margin-top:3mm;">
+    <div>
+      <ul class="tight small">
+        <li><strong>This is a heat proxy, not satellite temperature.</strong> Real land-surface temperature needs
+          Google Earth Engine, which needs an approval we chose not to wait on. Every component is stored
+          separately so real data can replace the proxy without rewriting anything.</li>
+        <li><strong>Scores are relative to their own city.</strong> A 70 in Pune and a 70 in Ahmedabad are not
+          the same absolute danger. Absolute danger enters through the forecast, not the vulnerability layer.</li>
+      </ul>
+    </div>
+    <div>
+      <ul class="tight small">
+        <li><strong>The forecast is Open-Meteo, not IMD.</strong> The interface credits it by name rather than
+          implying an official source.</li>
+        <li><strong>Population is estimated, not counted.</strong> Census totals spread by building count is a
+          standard method, but it is an estimate.</li>
+        <li><strong>The advisories are machine-drafted.</strong> Every one is labelled as such and carries a
+          read-before-sending notice.</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr class="rule">
+
+  <h3>Where it goes next</h3>
+  <div class="cols3" style="margin-top:3mm;">
+    <div class="panel">
+      <h4 style="margin-bottom:2mm;">More cities</h4>
+      <p class="small" style="margin-bottom:0;">The pipeline is city-agnostic. Adding a city means running the
+        seed script once — no code changes.</p>
+    </div>
+    <div class="panel">
+      <h4 style="margin-bottom:2mm;">Better inputs</h4>
+      <p class="small" style="margin-bottom:0;">Swap the heat proxy for real satellite land-surface temperature,
+        and ward boundaries for the 1&nbsp;km grid, and every number gets sharper.</p>
+    </div>
+    <div class="panel">
+      <h4 style="margin-bottom:2mm;">Beyond heat</h4>
+      <p class="small" style="margin-bottom:0;">Map → forecast → optimise → advise is a general pattern. Flooding
+        and air quality fit it without redesign.</p>
+    </div>
+  </div>
+
+  <div class="panel-a" style="margin-top:7mm;">
+    <p style="margin-bottom:0;font-size:10.4pt;"><strong>In one line:</strong> India already knows how to draw a
+      good heat map. HeatShield is an argument that the valuable, unbuilt part is what you do with it the
+      morning after.</p>
+  </div>
+
+  <div style="position:absolute;bottom:14mm;left:17mm;right:17mm;">
+    <div class="ramp"><span style="background:var(--r0)"></span><span style="background:var(--r1)"></span>
+      <span style="background:var(--r2)"></span><span style="background:var(--r3)"></span>
+      <span style="background:var(--r4)"></span></div>
+    <div class="small mono" style="margin-top:2mm;letter-spacing:.1em;">HEATSHIELD · PCCOE IGC 2026 · SDG-13 · github.com/sahilkarande0918-cmd/HeatShield</div>
+  </div>
+
+  <div class="folio">Page <b>10</b> / 10</div>
+</section>
+
+</body>
+</html>
