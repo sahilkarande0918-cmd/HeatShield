@@ -53,3 +53,8 @@ db/.cache/
 deck/node_modules/
 deck/render/
 deck/.cache/
+
+# presentation deliverables and generated renders (large binaries; regenerate from source)
+/outputs/
+deck/assets/*.png
+*.mp4
