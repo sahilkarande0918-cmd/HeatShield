@@ -1,0 +1,75 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* Replacement for the "SITING OPTIMIZATION OVERVIEW" graphic on slide 7.
+   The layout, the white card and the red/green before-after semantics are kept
+   exactly as the original had them — only the numbers change, from invented
+   figures to the ones the live system actually produces. */
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:1582px;height:834px;font-family:Roboto,sans-serif;background:transparent;
+  display:flex;flex-direction:column;}
+.hdr{text-align:center;font-weight:900;font-size:40px;letter-spacing:.02em;color:#111;
+  padding:4px 0 12px;}
+.card{flex:1;background:#fff;border-radius:10px;display:flex;overflow:hidden;}
+.half{flex:1;display:flex;flex-direction:column;}
+.ringwrap{flex:1;display:flex;align-items:center;justify-content:center;gap:26px;}
+.ring{position:relative;width:228px;height:228px;}
+.ring svg{transform:rotate(-90deg);}
+.pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:48px;color:#111;letter-spacing:-.02em;}
+.foot{padding:20px 10px 22px;text-align:center;}
+.foot .k{font-size:20px;font-weight:500;letter-spacing:.03em;color:#555;}
+.foot .v{font-size:26px;font-weight:900;letter-spacing:.02em;margin-top:5px;}
+.l{background:#fdeceb;} .l .v{color:#e23b32;}
+.r{background:#e9f8f0;} .r .v{color:#12a05c;}
+.mid{width:2px;background:#eceff1;}
+.deltawrap{display:flex;justify-content:center;padding:0 0 16px;}
+.delta{background:#111;color:#fff;border-radius:999px;padding:10px 30px;
+  font-size:24px;font-weight:700;letter-spacing:.01em;white-space:nowrap;}
+.sub{font-size:19px;color:#666;font-weight:500;margin-top:6px;}
+</style></head>
+<body>
+  <div class="hdr">SITING OPTIMIZATION OVERVIEW</div>
+  <div class="deltawrap"><div class="delta">+2,58,135 more people reached &nbsp;·&nbsp; computed live in 19&nbsp;ms</div></div>
+  <div class="card">
+    <div class="half">
+      <div class="ringwrap">
+        <div class="ring">
+          <svg width="228" height="228">
+            <circle cx="114" cy="114" r="94" fill="none" stroke="#e3e9ee" stroke-width="34"/>
+            <circle cx="114" cy="114" r="94" fill="none" stroke="#e23b32" stroke-width="34"
+              stroke-linecap="round" stroke-dasharray="56.1 590.4"/>
+          </svg>
+          <div class="pct">9.5%</div>
+        </div>
+      </div>
+      <div class="foot l">
+        <div class="k">CURRENT PLACEMENT</div>
+        <div class="v">26 PUBLIC WATER POINTS</div>
+        <div class="sub">reaches 1 in 10 people at risk</div>
+      </div>
+    </div>
+
+    <div class="mid"></div>
+
+    <div class="half">
+      <div class="ringwrap">
+        <div class="ring">
+          <svg width="228" height="228">
+            <circle cx="114" cy="114" r="94" fill="none" stroke="#e3e9ee" stroke-width="34"/>
+            <circle cx="114" cy="114" r="94" fill="none" stroke="#12a05c" stroke-width="34"
+              stroke-linecap="round" stroke-dasharray="114 476.6"/>
+          </svg>
+          <div class="pct">19.3%</div>
+        </div>
+      </div>
+      <div class="foot r">
+        <div class="k">RECOMMENDED &nbsp;+5 SITES</div>
+        <div class="v">+2,58,135 PEOPLE REACHED</div>
+        <div class="sub">reaches 1 in 5 people at risk</div>
+      </div>
+    </div>
+
+  </div>
+</body></html>
