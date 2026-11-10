@@ -24,7 +24,8 @@ it protects the most people — that siting step is the differentiator
   template when no key. (No Anthropic/Claude in the app code.)
 - Hand-written **greedy coverage-maximizing siting optimizer** (`lib/optimizer.ts`).
 - **Deploy:** Vercel, from GitHub. **Repo:** https://github.com/sahilkarande0918-cmd/HeatShield
-  **Deployed URL:** not recorded in repo — check the Vercel dashboard / `.vercel`.
+  **Deployed URL:** https://heat-shield-gules.vercel.app (Vercel project
+  `heat-shield`, auto-deploys from `main`).
 
 ## c) STATUS
 - **DONE** — Full 9-phase app (map, fusion model, optimizer, forecast chart,
@@ -36,6 +37,9 @@ it protects the most people — that siting step is the differentiator
   (`outputs/HeatShield-Deck.pptx`, gitignored): black-box/mask fixes, bold
   removed, +12 °C dashboard screenshot, reconciled slide-6/7 numbers. Deck
   *source* (chart.html, patch scripts, figures.json) is committed under `deck/`.
+- **DONE (10 Nov 2026)** — Live deploy verified: production READY at `14ff766`,
+  `npm run warm` all 12 endpoints ok, `/dashboard` map loads (style + tiles loaded,
+  1,435 Pune cells, no console errors).
 - **IN PROGRESS / NOT STARTED** — **Round-2 video V2** (HyperFrames HTML→MP4).
   Not built in this repo yet. V1 is the fallback submission — never overwrite it.
 
@@ -103,18 +107,26 @@ Deck assets: `node scripts/capture-deck-assets.mjs deck/assets` (needs app at
 - `25.5%` weighted-demand coverage from the app does NOT divide to the headcount
   gain — the deck deliberately uses the reconciled **19.3%** reach figure instead.
   If you ever show 25.5%, label it "coverage of weighted heat-risk demand".
-- Deployed Vercel URL not captured here — confirm it before `npm run warm`.
+- **Live numbers move with the forecast hour.** The locked numbers are one
+  specific +12 °C state. E.g. at 7:58 PM IST on 10 Nov the live +12 °C run gave
+  9.3% → 28.3% (weighted-demand share), 39 ms. For a live demo, pick the
+  afternoon-peak hour on the slider, and never present a live figure as the locked one.
+- In a hidden/background browser the map paints black (WebGL not composited)
+  even though it loaded — check `window.__hsMap.loaded()` rather than screenshots.
 - `gemini-2.5-flash` references in `lib/advisory.ts` comments are historical.
 
 ## i) NEXT STEPS (do the first one first)
-1. Confirm the live Vercel URL and that the deployed app loads the map (open it
-   in a real browser; MapLibre only inits when rAF fires).
-2. Build the **Round-2 video V2** (HyperFrames → `out/HeatShield_v2.mp4`), keeping
-   V1 untouched; use the Locked demo numbers + required caption.
-3. Optional: add a one-line footnote on deck slide 7 defining "today's relief".
+1. **Round-2 video is due today (10 Nov 2026).** Decide: submit V1 as-is, or
+   build **V2** (HyperFrames → `out/HeatShield_v2.mp4`), keeping V1 untouched;
+   Locked demo numbers + required caption. V1 location not recorded in repo — find it first.
+2. Optional: add a one-line footnote on deck slide 7 defining "today's relief".
+3. Before Round 3: `npm run warm -- https://heat-shield-gules.vercel.app`.
 
 ## j) EXACTLY WHAT I WAS DOING
-Finishing the **pitch-deck PPTX**, not the app. Last action: edited
+**10 Nov 2026:** verified the live deploy (old NEXT STEP 1) and recorded the
+URL. Nothing in the app changed. Next is the video decision.
+
+Before that — finishing the **pitch-deck PPTX**, not the app. Last action: edited
 `deck/chart.html` (recommended ring 25.5%→**19.3%**, dasharray `114 476.6`, pill →
 "+2,58,135 more people reached", subtitle "reaches 1 in 5 people at risk"),
 re-rendered `deck/assets/chart.png` via `scripts/shot-html.mjs`, re-composited it
